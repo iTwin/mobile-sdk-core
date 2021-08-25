@@ -1,0 +1,12 @@
+{
+  "general": {
+    "cancel": "Cancel",
+    "ok": "OK"
+  },
+  "messenger": {
+    "query-response-error": "Error returned from {{name}} query."
+  },
+  "ui-error": {
+    "internet-unreachable": "Could not connect to the server. Please check your internet connection and try again."
+  }
+}

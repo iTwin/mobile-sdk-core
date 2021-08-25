@@ -1,0 +1,87 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+      "tslint:recommended"
+    ],
+    "linterOptions": {
+      "exclude": [
+      ]
+    },
+    "jsRules": {},
+    "rules": {
+      "await-promise": [
+        true,
+        "PromisedAssertion"
+      ],
+      "ban": [
+        true,
+        {
+          "name": [
+            "Math",
+            "hypot"
+          ],
+          "message": "Use Geometry.hypotenuse methods instead"
+        }
+      ],
+      "no-return-await": true,
+      "promise-function-async": true,
+      "no-floating-promises": true,
+      // Standard Rules ======================================================
+      "max-line-length": [
+        false
+      ],
+      "curly": [
+        false,
+        "ignore-same-line"
+      ],
+      "max-classes-per-file": false,
+      "ordered-imports": [
+        true,
+        {
+          "import-sources-order": "any",
+          "named-imports-order": "case-insensitive"
+        }
+      ],
+      "interface-name": [
+        false
+      ],
+      "no-consecutive-blank-lines": true,
+      // NOTE: This does not enforce that the correct number of spaces are used. See ter-indent.
+      "indent": [
+        true,
+        "spaces",
+        2
+      ],
+      "array-type": [true, "array-simple"],
+      "space-before-function-paren": [
+        true,
+        {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always"
+        }
+      ],
+      "variable-name": [
+        true,
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore"
+      ],
+      "align": [
+        true,
+        "statements"
+      ],
+      "object-literal-sort-keys": false,
+      "no-bitwise": false,
+      "no-unused-expression": false,
+      "no-namespace": false,
+      "one-variable-per-declaration": false,
+      "no-empty": false,
+      "no-switch-case-fall-through": true,
+      "no-conditional-assignment": false,
+      "no-duplicate-imports": true,
+      "member-ordering": [
+        false
+      ]
+    }
+  }
