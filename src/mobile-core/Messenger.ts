@@ -34,6 +34,7 @@ export class QueryHandler {
   /** Call to set the handler function for this query.
    * @param handler: The handler function for this query.
    * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
+   * @returns: An arrow function that when called, unsets the handler.
    * @public
    */
   public setHandler(handler: QueryListener, scope?: any): () => void {
@@ -45,6 +46,7 @@ export class QueryHandler {
   /** Call to set the handler function for this query. It will be automatically unset after the first call.
    * @param handler: The handler function for this query.
    * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
+   * @returns: An arrow function that when called, unsets the handler.
    * @public
    */
   public setOnce(handler: QueryListener, scope?: any): () => void {
