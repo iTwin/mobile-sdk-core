@@ -9,11 +9,12 @@ function sync_to_dest {
 }
 
 if [ "$1" != "" ]; then
-  sync_to_dest $1
+  appDir=$1
 elif [ "$ITM_TEST_APP_DIR" != "" ]; then
-  sync_to_dest $ITM_TEST_APP_DIR
-  cd "../itwin-mobileui-react"
-  [ -d lib ] && ./syncToTestApp.sh
-  cd -
+  appDir=$ITM_TEST_APP_DIR
+elif [ -d "../mobile-sdk-samples/iOS/MobileStarter/react-app" ]; then
+  appDir=../mobile-sdk-samples/iOS/MobileStarter/react-app
 fi
-sync_to_dest "../itwin-mobileui-react"
+
+sync_to_dest $appDir
+sync_to_dest "../mobile-ui-react"
