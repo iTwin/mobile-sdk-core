@@ -3,8 +3,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { I18N } from "@bentley/imodeljs-i18n";
 import { getCssVariableAsNumber, UiEvent } from "@bentley/ui-core";
-import { EmphasizeElements, IModelApp, ScreenViewport } from "@bentley/imodeljs-frontend";
-// import { BeEvent, Id64Set, Listener } from "@bentley/bentleyjs-core";
+import { LocalBriefcaseProps } from "@bentley/imodeljs-common";
+import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@bentley/imodeljs-frontend";
 import { Messenger } from ".";
 import "./MobileCore.scss";
 
@@ -202,6 +202,29 @@ export class MobileCore {
       return new Date(max);
     }
     return new Date(value);
+  }
+
+  /** Delete all files associated with the specified cached briefcase.
+   * @param briefcase The cached briefcase to delete.
+   * @public
+   */
+  public static async deleteCachedBriefcase(briefcase: LocalBriefcaseProps) {
+    await NativeApp.deleteBriefcase(briefcase.fileName);
+  }
+
+  /** Delete all cached briefcases for the specified project, or all cached briefcases for all projects
+   * if a project is not specified.
+   * @param projectId If set, the projectId of the project from which to delete all cached briefcases.
+   *                  If unset, cached briefcases from all projects will be deleted.
+   * @public
+   */
+  public static async deleteCachedBriefcases(projectId?: string) {
+    const briefcases = await NativeApp.getCachedBriefcases();
+    for (const briefcase of briefcases) {
+      if (!projectId || projectId === briefcase.contextId) {
+        await NativeApp.deleteBriefcase(briefcase.fileName);
+      }
+    }
   }
 
   private static _keyboardWillShow = async (args: KeyboardEventArgs) => {
