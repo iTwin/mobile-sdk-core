@@ -1,0 +1,56 @@
+jobs:
+- job: Build
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+    - checkout: self
+      clean: all
+
+    - task: NodeTool@0
+      displayName: Use Node 12.x
+      inputs:
+        versionSpec: 12.x
+        latest: true
+
+    - task: npmAuthenticate@0
+      inputs:
+        workingFile: .npmrc
+
+    - script: npm ci
+      displayName: npm install
+    - script: npm run lint
+      displayName: npm run lint
+    - script: npm run build
+      displayName: npm run build
+    - bash: |
+        pkgName=$(node -p "require('./package.json').name")
+        pkgVer=$(node -p "require('./package.json').version")
+
+        ver=$(npm view $pkgName version)
+
+        if [ -z "$ver" ]; then
+          ver=0.0.0
+          echo "\$ver is empty"
+        fi
+
+        echo "Server version found: $ver"
+        echo "Local version found: $pkgVer"
+
+        if [ "$ver" != "$pkgVer" ] && [ "$(printf '%s\n' "$ver" "$pkgVer" | sort -V | head -n1)" = "$ver" ]; then 
+          newer=true
+        else
+          newer=false
+        fi
+
+        echo "##vso[task.setvariable variable=shouldPublish;isOutput=true]$newer"
+        echo "##vso[task.setvariable variable=version;isOutput=true]$pkgVer"
+        echo "Should publish: $newer"
+      displayName: Check if should publish
+      name: checkPublish
+    - bash: npm pack
+      condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
+      displayName: npm pack
+    - publish: mobile-core-$(checkPublish.version).tgz
+      artifact: tarball
+      displayName: Publish packed file
+      condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
