@@ -35,7 +35,8 @@ export interface AlertAction {
 
 /**
  * Action to take in the [[ActionSheetButton]] component.
- * @public
+ * Note: this class is going away once ActionSheet.show is changed to directly return the user's selection.
+ * @beta
  */
 export interface ActionSheetAction extends AlertAction {
   /** Callback called when this action is selected by the user. */
@@ -50,7 +51,7 @@ interface AlertControllerActions {
 }
 
 /** Properties for [[ActionSheet.show]]
- * @public
+ * @beta
  */
 export interface ActionSheetProps {
   /** Optional title to show on the action sheet. */
@@ -69,7 +70,9 @@ export interface ActionSheetProps {
 
 /**
  * Class used to show a native Action Sheet.
- * @public
+ * Note: This API is going to be changed to return the user's selection in the call to show, instead of having each
+ * action have a callback.
+ * @beta
  */
 export class ActionSheet {
   private static _nextSenderId = 0;
@@ -127,9 +130,12 @@ export class ActionSheet {
 
   /**
    * Show a native action sheet.
+   * Note: This function is going to change to directly return the user's selection, instead of having a callback
+   * in each action.
    * @param props The properties of the action sheet.
    * @param sourceRect The bounding rectangle of the control that is showing the action sheet.
    * @param senderId The optional sender ID to use for messaging. If undefined, this will be auto-generated.
+   * @beta
    */
   public static show = async (props: ActionSheetProps, sourceRect: DOMRect, senderId?: number) => {
     if (senderId === undefined) {
