@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) 2021 Bentley Systems, Incorporated. All rights reserved.
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 // this file will contain all the exports for this "package"
 export * from "./mobile-core/Messenger";
