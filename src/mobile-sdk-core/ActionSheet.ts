@@ -127,7 +127,7 @@ export class ActionSheet {
     if (!action) return;
     action.onSelected(action);
     ActionSheet.unregisterActions(senderId);
-  }
+  };
 
   /**
    * Show a native action sheet.
@@ -177,5 +177,5 @@ export class ActionSheet {
     }
     await Messenger.query("Bentley_ITM_presentActionSheet", messageData);
     ActionSheet._waiting[senderId] = false;
-  }
+  };
 }

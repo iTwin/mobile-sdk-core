@@ -4,10 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { Base64Converter } from ".";
 
-// Note: Nothing is exported from this file, and that is intentionl. This is an
+// Note: Nothing is exported from this file, and that is intentional. This is an
 // iOS and Android Polyfill for navigator.geolocation.
-
-// tslint:disable: only-arrow-functions
 
 const anyWindow: any = window;
 
@@ -93,6 +91,7 @@ function positionUpdate(messageData: string, geolocation: BentleyGeolocation) {
   return message.positionId;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 function Bentley_ITMGeolocation(messageName: string, messageData: string) {
   switch (messageName) {
     case "watchPosition":
@@ -105,7 +104,7 @@ function Bentley_ITMGeolocation(messageName: string, messageData: string) {
       }
       break;
     default:
-      console.error("Unknown message name (" + messageName + ") in Bentley_ITMGeolocation call.");
+      console.error(`Unknown message name (${messageName}) in Bentley_ITMGeolocation call.`); // eslint-disable-line no-console
       break;
   }
 }

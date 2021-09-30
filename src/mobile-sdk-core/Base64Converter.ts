@@ -29,9 +29,9 @@ export class Base64Converter {
       let h = utf8c.toString(16);
       if (h.length < 2) {
         // Add 0 prefix for byte values of 0-15 so that hex string is always two digits.
-        h = "0" + h;
+        h = `0${h}`;
       }
-      s += "%" + h;
+      s += `%${h}`;
     }
     return decodeURIComponent(s);
   }

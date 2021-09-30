@@ -21,7 +21,7 @@ export class UIError {
   public static create: (error: any) => UIError = (error) => UIError.create(error);
 
   public static i18n(key: string): string {
-    return MobileCore.translate("ui-error." + key);
+    return MobileCore.translate(`ui-error.${key}`);
   }
 
   /** Creates an error for use when the internet is unreachable.

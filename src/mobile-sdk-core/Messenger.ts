@@ -22,7 +22,7 @@ class QueryContext {
  */
 export class MessageNotImplementedError extends Error {
   constructor(messageName?: string) {
-    super("No handler for " + (messageName ?? "<Unknown>") + " query.");
+    super(`No handler for ${(messageName ?? "<Unknown>")} query.`);
   }
 }
 
@@ -40,7 +40,7 @@ export class QueryHandler {
    */
   public setHandler(handler: QueryListener, scope?: any): () => void {
     this._handler = new QueryContext(handler, scope, false);
-    const event = this;
+    const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
     return () => { event.unsetHandler(handler, scope); };
   }
 
@@ -52,7 +52,7 @@ export class QueryHandler {
    */
   public setOnce(handler: QueryListener, scope?: any): () => void {
     this._handler = new QueryContext(handler, scope, true);
-    const event = this;
+    const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
     return () => { event.unsetHandler(handler, scope); };
   }
 
@@ -125,7 +125,7 @@ export class Messenger {
    * @public
    */
   public static sendMessage(name: string, message?: any) {
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Messenger.query(name, message);
   }
 
