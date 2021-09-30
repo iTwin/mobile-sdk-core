@@ -27,7 +27,7 @@ export enum ReachabilityStatus {
  */
 declare global {
   interface Window {
-    Bentley_InternetReachabilityStatus?: ReachabilityStatus;
+    Bentley_InternetReachabilityStatus?: ReachabilityStatus; // eslint-disable-line @typescript-eslint/naming-convention
   }
 }
 
@@ -84,7 +84,7 @@ export class MobileCore {
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
-    const result = this._i18n.translate("iTwinMobileCore:" + key, options);
+    const result = this._i18n.translate(`iTwinMobileCore:${key}`, options);
     return result;
   }
 
@@ -234,30 +234,30 @@ export class MobileCore {
     // or padding, so subtract the size of the bottom safe area from the effective keyboard height.
     const effectiveHeight = args.height - getCssVariableAsNumber("--mui-safe-area-bottom");
     MobileCore.setCssVariables([
-      { name: "--mui-keyboard-height", value: args.height + "px" },
-      { name: "--mui-keyboard-effective-height", value: effectiveHeight + "px" },
-      { name: "--mui-keyboard-animation-duration", value: args.duration + "s" },
+      { name: "--mui-keyboard-height", value: `${args.height}px` },
+      { name: "--mui-keyboard-effective-height", value: `${effectiveHeight}px` },
+      { name: "--mui-keyboard-animation-duration", value: `${args.duration}s` },
       // When the software keyboard is visible, the bottom of the usable screen has no safe area.
       { name: "--mui-safe-area-bottom-over-keyboard", value: "0px" },
     ]);
     MobileCore.onKeyboardWillShow.emit(args);
-  }
+  };
 
   private static _keyboardDidShow = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = true;
     MobileCore.onKeyboardDidShow.emit(args);
-  }
+  };
 
   private static _keyboardWillHide = async (args: KeyboardEventArgs) => {
     MobileCore.setCssVariables([
       { name: "--mui-keyboard-height", value: "0px" },
       { name: "--mui-keyboard-effective-height", value: "0px" },
-      { name: "--mui-keyboard-animation-duration", value: args.duration + "s" },
+      { name: "--mui-keyboard-animation-duration", value: `${args.duration}s` },
       // When the software keyboard is not visible, the bottom of the visible screen can have a safe area.
       { name: "--mui-safe-area-bottom-over-keyboard", value: "var(--mui-safe-area-bottom)" },
     ]);
     MobileCore.onKeyboardWillHide.emit(args);
-  }
+  };
 
   private static _keyboardDidHide = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = false;
@@ -266,18 +266,18 @@ export class MobileCore {
     // Ensure the UI is scrolled to the top after the keyboard closes.
     // This does not seem to happen automatically on an iPHone 7 using iOS 13.3.
     document.documentElement.scrollTop = 0;
-  }
+  };
 
   private static _muiUpdateSafeAreas = async (args: UpdateSafeAreaArgs) => {
     const root = document.documentElement;
     for (const sideName in args) {
       if (args.hasOwnProperty(sideName)) {
-        const key = "--mui-safe-area-" + sideName;
-        const value = ((args as any)[sideName]).toString() + "px";
+        const key = `--mui-safe-area-${sideName}`;
+        const value = `${((args as any)[sideName]).toString()}px`;
         root.style.setProperty(key, value);
       }
     }
-  }
+  };
 }
 
 /**
@@ -309,7 +309,7 @@ export function getCssVariableAsNumberOrDefault(variable: string, defaultValue =
  * @returns The size of the safe area on the specified screen edge.
  */
 export function getSafeAreaInset(edge: ScreenEdge) {
-  const variableName = "--mui-safe-area-" + edge;
+  const variableName = `--mui-safe-area-${edge}`;
   const sai = parseInt(getComputedStyle(document.documentElement).getPropertyValue(variableName).trim(), 10);
   return isNaN(sai) ? 0 : sai;
 }
@@ -320,7 +320,7 @@ export function getSafeAreaInset(edge: ScreenEdge) {
  * @returns A copy of the input object without the key.
  */
 export function withoutProperty(props: any, keyName: string) {
-  const { [keyName]: removed, ...rest } = props;
+  const { [keyName]: removed, ...rest } = props; // eslint-disable-line @typescript-eslint/no-unused-vars
   return rest;
 }
 
@@ -363,12 +363,12 @@ export function getEmphasizeElements(): [ScreenViewport | undefined, EmphasizeEl
  */
 export function getAllViewports() {
   const viewports: ScreenViewport[] = [];
-  IModelApp.viewManager.forEachViewport((vp) => viewports.push(vp));
+  IModelApp.viewManager.forEachViewport((vp) => viewports.push(vp)); // eslint-disable-line deprecation/deprecation
   return viewports;
 }
 
 const anyWindow: any = window;
 
 if (anyWindow.Bentley_FinishLaunching === undefined) {
-  anyWindow.Bentley_FinishLaunching = () => {}
+  anyWindow.Bentley_FinishLaunching = () => {};
 }

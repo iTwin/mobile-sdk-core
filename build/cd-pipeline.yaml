@@ -1,6 +1,12 @@
 trigger:
   - main
 
+pr:
+  drafts: false
+  branches:
+    include:
+      - main
+
 name: $(date:yyyy.MM.dd)$(Rev:.r)
 
 resources:

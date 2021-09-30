@@ -51,7 +51,7 @@ export class MessengerImpl {
   }
 
   public static async query(name: string, message?: any) {
-    const responseName = "Bentley_ITMMessenger_QueryResponse" + MessengerImpl._queryId;
+    const responseName = `Bentley_ITMMessenger_QueryResponse${MessengerImpl._queryId}`;
     const messageResponse = new Promise<string | undefined>((resolve) => {
       MessengerImpl._anyWindow[responseName] = resolve;
     });

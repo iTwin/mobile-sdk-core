@@ -11,7 +11,7 @@
     "copy:assets": "cpx \"./src/**/*.{*css,svg}\" ./lib && cpx \"./public/**/*\" ./lib/public",
     "build": "npm run copy:assets && tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "tslint --project . 1>&2",
+    "lint": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
     "build:debug": "npm run build && ./syncToTestApp.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,9 +25,7 @@
     "url": "https://github.com/iTwin/mobile-sdk-core"
   },
   "dependencies": {
-    "@babel/core": "^7.15.4",
     "@bentley/bentleyjs-core": "2.19.11",
-    "@bentley/eslint-plugin": "2.19.11",
     "@bentley/frontend-authorization-client": "2.19.11",
     "@bentley/geometry-core": "2.19.11",
     "@bentley/imodelhub-client": "2.19.11",
@@ -48,12 +46,6 @@
     "@svgr/cli": "^5.5.0",
     "@swc/core": "^1.2.84",
     "@swc/wasm": "^1.2.84",
-    "@types/node": "10.14.1",
-    "@types/react": "^16.14.13",
-    "@types/react-dom": "16.8.4",
-    "@types/react-redux": "^7.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.30.0",
-    "@typescript-eslint/parser": "^4.30.0",
     "bufferutil": "^4.0.3",
     "canvas": "^2.8.0",
     "classnames": "^2.2.6",
@@ -61,17 +53,39 @@
     "eslint": "^7.31.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "fibers": "^5.0.0",
-    "node-sass": "^6.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "redux": "^4.1.1",
+    "type-fest": "^0.13.1",
+    "utf-8-validate": "^5.0.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.4",
+    "@bentley/eslint-plugin": "2.19.11",
+    "@types/node": "10.14.1",
+    "@types/react": "^16.14.13",
+    "@types/react-dom": "16.8.4",
+    "@types/react-redux": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
+    "cpx": "^1.5.0",
+    "eslint": "^7.31.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "node-sass": "^6.0.1",
     "sass": "^1.39.0",
     "ts-node": "^10.2.0",
     "tslint": "^6.1.3",
-    "type-fest": "^0.13.1",
     "typedoc": "^0.21.9",
-    "typescript": "~4.3.5",
-    "utf-8-validate": "^5.0.5"
+    "typescript": "~4.3.5"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "@bentley"
+    ],
+    "extends": "plugin:@bentley/imodeljs-recommended",
+    "rules": {
+      "@bentley/no-internal-barrel-imports": "off"
+    }
   }
 }
