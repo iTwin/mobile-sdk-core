@@ -1,9 +1,9 @@
 {
-  "name": "@itwin/mobile-core",
+  "name": "@itwin/mobile-sdk-core",
   "version": "0.1.1-dev.3",
   "description": "Bentley iTwin Mobile Core module",
-  "main": "lib/mobile-core.js",
-  "types": "lib/mobile-core.d.ts",
+  "main": "lib/mobile-sdk-core.js",
+  "types": "lib/mobile-sdk-core.d.ts",
   "files": [
     "lib/**/*"
   ],
@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iTwin/mobile-core"
+    "url": "https://github.com/iTwin/mobile-sdk-core"
   },
   "dependencies": {
     "@babel/core": "^7.15.4",

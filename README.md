@@ -1,1 +1,1 @@
-# mobile-core
+# iTwin mobile-sdk-core
