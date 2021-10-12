@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Base64Converter } from ".";
+import { Base64Converter } from "./Base64Converter";
 
 // Note: Nothing is exported from this file, and that is intentional. This is an
 // iOS and Android Polyfill for navigator.geolocation.

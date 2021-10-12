@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { MobileCore } from ".";
+import { MobileCore } from "./MobileCore";
 
 /** Type used to listen for queries from native code.
  * @param message: The optional message data received from the native code.

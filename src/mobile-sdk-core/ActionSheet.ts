@@ -2,7 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ActionStyle, AlertActions, callOnSelected, Messenger, MobileCore } from ".";
+import { ActionStyle, AlertActions, callOnSelected } from "./Alert";
+import { Messenger } from "./Messenger";
+import { MobileCore } from "./MobileCore";
 
 /** Properties for [[ActionSheet.show]]
  * @public

@@ -6,7 +6,7 @@ import { I18N } from "@bentley/imodeljs-i18n";
 import { getCssVariableAsNumber, UiEvent } from "@bentley/ui-core";
 import { LocalBriefcaseProps } from "@bentley/imodeljs-common";
 import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@bentley/imodeljs-frontend";
-import { Messenger } from ".";
+import { Messenger } from "./Messenger";
 import "./Geolocation"; // Just importing this activates the Polyfill.
 import "./MobileCore.scss";
 
