@@ -2,7 +2,36 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ActionStyle, AlertAction, Messenger } from ".";
+import { Messenger } from ".";
+
+/**
+ * Style used by [[ActionSheetAction]] and [[AlertAction]].
+ * @public
+ */
+export enum ActionStyle {
+  Default = "default",
+  Cancel = "cancel",
+  Destructive = "destructive",
+}
+
+/**
+ * Action to take in the [[presentAlert]] function or [[ActionSheetButton]] component.
+ * @public
+ */
+export interface AlertAction {
+  /** The key for this action, which is then returned by presentAlert if this action is selected: must be unique. */
+  name: string;
+  /** The text to present to the user for this action. */
+  title: string;
+  /** The style for this action. Default is [[ActionStyle.Default]]. */
+  style?: ActionStyle;
+  /** The callback called when this action is selected by the user.
+   *
+   * It is your choice whether to use this or process the return value from [[processAlert]] or
+   * [[ActionSheet.show]]
+   */
+  onSelected?: (action: AlertAction) => void;
+}
 
 /**
  * Actions to take in the [[presentAlert]] function.
@@ -29,7 +58,8 @@ export interface AlertProps {
  *
  * Note: While this does use a native alert box like window.alert() and window.confirm(), it does not pause JavaScript
  * execution in the web view. It does, however, prevent all user interaction outside the alert box.
- * @returns The name of the action selected by the user.
+ * @returns The name of the action selected by the user. If you set the onSelected callback for
+ *          each [[AlertAction]], you can ignore the return value.
  * @public
  */
 export async function presentAlert(props: AlertProps): Promise<string> {
@@ -45,5 +75,26 @@ export async function presentAlert(props: AlertProps): Promise<string> {
       action.style = ActionStyle.Default;
     }
   }
-  return Messenger.query("Bentley_ITM_presentAlert", messageData);
+  const result: string = await Messenger.query("Bentley_ITM_presentAlert", messageData);
+  callOnSelected(result, actions);
+  return result;
+}
+
+/**
+ * Call the onSelected callback on the action whose name matches [[selectedActionName]].
+ *
+ * If onSelected is undefined for the action with the matching name, this function does nothing.
+ *
+ * Note: this is used internally by [[presentActionSheet]] and [[presentAlert]].
+ * @param selectedActionName The name of the action selected by the user.
+ * @param actions The list of actions presented to the user.
+ */
+export function callOnSelected(selectedActionName: string | undefined, actions: AlertAction[]) {
+  if (selectedActionName === undefined) return;
+  for (const action of actions) {
+    if (action.name === selectedActionName) {
+      action.onSelected?.(action);
+      return;
+    }
+  }
 }
