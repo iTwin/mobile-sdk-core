@@ -160,17 +160,21 @@ export class MobileCore {
     return this._urlSearchParams;
   }
 
+  public static getUrlSearchParam(name: string) {
+    const searchParams = this.urlSearchParams;
+    const value = searchParams.get(name);
+    if (value !== null) {
+      return value;
+    }
+    return undefined;
+  }
+
   /** Gets the name of the platform value in the current URL's hash parameters.
    * @returns The platform value from the current URL's hash parameters, or "unknown" if there is no platform value.
    * @public
    */
   public static getPlatform() {
-    const searchParams = this.urlSearchParams;
-    const platformValue = searchParams.get("platform");
-    if (platformValue !== null) {
-      return platformValue;
-    }
-    return "unknown";
+    return this.getUrlSearchParam("platform") ?? "unknown";
   }
 
   /** Check to see if the current platform is iOS.
