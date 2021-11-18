@@ -34,10 +34,14 @@ export interface AlertAction {
 }
 
 /**
- * Actions to take in the [[presentAlert]] function.
+ * Actions to take in [[presentAlert]] and [[presentActionSheet]].
+ *
+ * Note: If you use a function that returns a Promise, it needs to resolve the Promise quickly,
+ * since the function does not get called until the user triggers it. Consequently, the user is
+ * actively waiting for the Promise resolution.
  * @public
  */
-export type AlertActions = AlertAction[] | (() => AlertAction[]);
+export type AlertActions = AlertAction[] | (() => AlertAction[]) | (() => Promise<AlertAction[]>);
 
 /**
  * Props for the [[presentAlert]] function.
@@ -53,6 +57,23 @@ export interface AlertProps {
 }
 
 /**
+ * Takes an object of type AlertActions, which may either be an array of AlertAction objects or
+ * a function that returns an array of AlertAction objects, and returns the actual array of
+ * AlertAction objects.
+ *
+ * Note: The function may be synchronous or asynchronous.
+ * @param alertActions The AlertActions object that may need to be extracted.
+ * @returns The array of AlertAction objects.
+ */
+export async function extractAlertActions(alertActions: AlertActions) {
+  if (typeof alertActions == "function") {
+    return alertActions();
+  } else {
+    return alertActions;
+  }
+}
+
+/**
  * Function to present an alert box to the user with a set of possible actions they can take.
  * No more than 3 actions are allowed on Android (4 if one has a style of Cancel).
  *
@@ -64,7 +85,7 @@ export interface AlertProps {
  */
 export async function presentAlert(props: AlertProps): Promise<string> {
   const { title, message, actions: propsActions } = props;
-  const actions = typeof propsActions === "function" ? propsActions() : propsActions;
+  const actions = await extractAlertActions(propsActions);
   const messageData = {
     title,
     message,

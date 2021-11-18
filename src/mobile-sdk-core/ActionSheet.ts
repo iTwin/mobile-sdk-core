@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ActionStyle, AlertActions, callOnSelected } from "./Alert";
+import { ActionStyle, AlertActions, callOnSelected, extractAlertActions } from "./Alert";
 import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
@@ -36,7 +36,7 @@ export interface ActionSheetProps {
  */
 export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect) {
   const { message, title, actions: propsActions, skipCancel = false } = props;
-  const actions = typeof propsActions === "function" ? propsActions() : propsActions;
+  const actions = await extractAlertActions(propsActions);
   const messageData = {
     title,
     message,
