@@ -1,7 +1,9 @@
 {
   "general": {
     "cancel": "Cancel",
-    "ok": "OK"
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No"
   },
   "messenger": {
     "query-response-error": "Error returned from {{name}} query."

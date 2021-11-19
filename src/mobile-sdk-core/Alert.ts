@@ -3,6 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { Messenger } from "./Messenger";
+import { MobileCore } from "./MobileCore";
 
 /**
  * Style used by [[ActionSheetAction]] and [[AlertAction]].
@@ -118,4 +119,45 @@ export function callOnSelected(selectedActionName: string | undefined, actions: 
       return;
     }
   }
+}
+
+async function presentConfirmationAlert(title: string, message: string, isYesNo: boolean, destructiveChoice: boolean | undefined = undefined) {
+  return (await presentAlert({
+    title,
+    message,
+    actions: [{
+      name: "yes",
+      title: MobileCore.translate(isYesNo ? "general.yes" : "general.ok"),
+      style: destructiveChoice ? ActionStyle.Destructive : ActionStyle.Default,
+    },
+    {
+      name: "no",
+      title: MobileCore.translate(isYesNo ? "general.no" : "general.cancel"),
+      style: destructiveChoice === false ? ActionStyle.Destructive : ActionStyle.Default,
+    }],
+  })) === "yes";
+}
+
+/**
+ * Presents an alert box with "Yes" and "No" buttons.
+ * @param title The title to use for the alert.
+ * @param message The message to show in the alert.
+ * @param destructiveChoice If true, "Yes" choice is destructive, if false, "No" choice is destructive,
+ *                          if undefined, neither choice is destructive, default is undefined.
+ * @returns true if the user selects "Yes", or false otherwise.
+ */
+export async function presentYesNoAlert(title: string, message: string, destructiveChoice: boolean | undefined = undefined) {
+  return presentConfirmationAlert(title, message, true, destructiveChoice);
+}
+
+/**
+ * Presents an alert box with "OK" and "Cancel" buttons.
+ * @param title The title to use for the alert.
+ * @param message The message to show in the alert.
+ * @param destructiveChoice If true, "OK" choice is destructive, if false, "Cancel" choice is destructive,
+ *                          if undefined, neither choice is destructive, default is undefined.
+ * @returns true if the user selects "OK", or false otherwise.
+ */
+export async function presentOkCancelAlert(title: string, message: string, destructiveChoice: boolean | undefined = undefined) {
+  return presentConfirmationAlert(title, message, false, destructiveChoice);
 }
