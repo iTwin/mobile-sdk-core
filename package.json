@@ -5,7 +5,8 @@
   "main": "lib/mobile-sdk-core.js",
   "types": "lib/mobile-sdk-core.d.ts",
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "!lib/**/*.map"
   ],
   "scripts": {
     "copy:assets": "cpx \"./src/**/*.{*css,svg}\" ./lib && cpx \"./public/**/*\" ./lib/public",
