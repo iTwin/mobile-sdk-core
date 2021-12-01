@@ -4,8 +4,10 @@ function sync_to_dest {
   destDir=${1}/node_modules/@itwin/mobile-sdk-core
   # If destDir is a symlink, it probably came from nmp link or a file: package.json reference. Delete the link.
   [ -L "${destDir}" ] && rm "${destDir}"
+  # If node_modules exists in destDir, that means that the module was installed by npm; nuke the install.
+  [ -d "${destDir}/node_modules" ] && rm -rf "${destDir}"
   [ -d "${destDir}" ] || mkdir -p "${destDir}"
-  rsync -aL --delete lib LICENSE.md package.json README.md "${destDir}/"
+  rsync -aL --delete lib src LICENSE.md package.json README.md "${destDir}/"
 }
 
 if [ "$1" != "" ]; then

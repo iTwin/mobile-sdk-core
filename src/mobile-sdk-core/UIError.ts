@@ -3,7 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { ResponseError } from "@bentley/itwin-client";
-import { MessageNotImplementedError, MobileCore } from ".";
+import { MessageNotImplementedError } from "./Messenger";
+import { MobileCore } from "./MobileCore";
 
 /** Base class for showing a user friendly error.
  * For common errors, provide utility creation methods in UIError.

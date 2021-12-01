@@ -2,13 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  Base64Converter,
-  MessageNotImplementedError,
-  Messenger,
-  MobileCore,
-  UIError,
-} from ".";
+import { Base64Converter } from "./Base64Converter";
+import { MessageNotImplementedError, Messenger } from "./Messenger";
+import { MobileCore } from "./MobileCore";
+import { UIError } from "./UIError";
 
 // MessengerImpl implementation that works with iOS and Android.
 // Note: Incoming data from native side is BASE64-encoded UTF-8. For any data that is

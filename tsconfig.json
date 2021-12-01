@@ -10,7 +10,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "isolatedModules": true
   },

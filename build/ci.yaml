@@ -46,7 +46,7 @@ jobs:
     - bash: npm pack
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
       displayName: npm pack
-    - publish: mobile-sdk-core-$(checkPublish.version).tgz
+    - publish: itwin-mobile-sdk-core-$(checkPublish.version).tgz
       artifact: tarball
       displayName: Publish packed file
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))

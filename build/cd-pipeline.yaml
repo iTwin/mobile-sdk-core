@@ -31,5 +31,5 @@ stages:
   jobs:
     - template: templates/npmjs-publish-deployment.yaml@build-pipeline-scripts
       parameters:
-        path: mobile-sdk-core-$(version).tgz
+        path: itwin-mobile-sdk-core-$(version).tgz
         artifactName: tarball
