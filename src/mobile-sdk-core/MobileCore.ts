@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { I18N } from "@bentley/imodeljs-i18n";
-import { getCssVariableAsNumber, UiEvent } from "@bentley/ui-core";
+import { BeUiEvent } from "@bentley/bentleyjs-core";
 import { LocalBriefcaseProps } from "@bentley/imodeljs-common";
 import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@bentley/imodeljs-frontend";
 import { Messenger } from "./Messenger";
@@ -34,7 +34,7 @@ declare global {
 /** Makes one or more properties optional for the given type. */
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
-/** Interface for UiEvents posted about software keyboard showing and hiding. */
+/** Interface for BeUiEvents posted about software keyboard showing and hiding. */
 export interface KeyboardEventArgs {
   /** The animation duration for the software keyboard hiding or showing. */
   duration: number;
@@ -42,7 +42,7 @@ export interface KeyboardEventArgs {
   height: number;
 }
 
-/** Interface for UiEvents posted about CSS variable changes made by [[MobileCore.setCssVariable]] and
+/** Interface for BeUiEvents posted about CSS variable changes made by [[MobileCore.setCssVariable]] and
  * [[MobileCore.setCssVariables]].
  */
 export interface CssVariableEventArgs {
@@ -65,18 +65,18 @@ export class MobileCore {
   private static _isKeyboardVisible = false;
   private static _urlSearchParams: URLSearchParams | undefined;
 
-  /** UiEvent emitted right before the software keyboard is shown. */
-  public static onKeyboardWillShow = new UiEvent<KeyboardEventArgs>();
-  /** UiEvent emitted right after the software keyboard is shown. */
-  public static onKeyboardDidShow = new UiEvent<KeyboardEventArgs>();
-  /** UiEvent emitted right before the software keyboard is hidden. */
-  public static onKeyboardWillHide = new UiEvent<KeyboardEventArgs>();
-  /** UiEvent emitted right after the software keyboard is hidden. */
-  public static onKeyboardDidHide = new UiEvent<KeyboardEventArgs>();
-  /** UiEvent emitted when [[MobileCore.setCssVariable]] or [[MobileCore.setCssVariables]] are used to change CSS variable
+  /** BeUiEvent emitted right before the software keyboard is shown. */
+  public static onKeyboardWillShow = new BeUiEvent<KeyboardEventArgs>();
+  /** BeUiEvent emitted right after the software keyboard is shown. */
+  public static onKeyboardDidShow = new BeUiEvent<KeyboardEventArgs>();
+  /** BeUiEvent emitted right before the software keyboard is hidden. */
+  public static onKeyboardWillHide = new BeUiEvent<KeyboardEventArgs>();
+  /** BeUiEvent emitted right after the software keyboard is hidden. */
+  public static onKeyboardDidHide = new BeUiEvent<KeyboardEventArgs>();
+  /** BeUiEvent emitted when [[MobileCore.setCssVariable]] or [[MobileCore.setCssVariables]] are used to change CSS variable
    * values.
    */
-  public static onCssVariableDidChange = new UiEvent<CssVariableEventArgs>();
+  public static onCssVariableDidChange = new BeUiEvent<CssVariableEventArgs>();
 
   /** Translate a string from the MobileCore i18n namespace.
    * @param - The key for the string to translate. For example, "general.cancel".
@@ -336,15 +336,18 @@ export function withoutClassName(props: any) {
   return withoutProperty(props, "className");
 }
 
-/** Convenience class for a [[UiEvent]] without any parameters */
-export class NullUiEvent extends UiEvent<null> {
+/** Convenience class for a [[BeUiEvent]] without any parameters */
+export class NullBeUiEvent extends BeUiEvent<null> {
   public override emit() {
     super.emit(null);
   }
 }
 
+/** Here for backwards compatibility; use NullBeUiEvent in new code. */
+export type NullUiEvent = NullBeUiEvent;
+
 /** Delays the emit with a setTimeout call to allow for any new state to settle. */
-export class ReloadedEvent extends NullUiEvent {
+export class ReloadedEvent extends NullBeUiEvent {
   public override emit() {
     setTimeout(() => super.emit(), 0);
   }
@@ -375,4 +378,38 @@ const anyWindow: any = window;
 
 if (anyWindow.Bentley_FinishLaunching === undefined) {
   anyWindow.Bentley_FinishLaunching = () => {};
+}
+
+// NOTE: getCssVariable and getCssVariableAsNumber were copied here from:
+// https://github.com/iTwin/itwinjs-core/blob/e0a47b42ff521849957a14df863a86252f791487/ui/core-react/src/core-react/utils/getCssVariable.ts
+// These two functions were the ONLY dependencies that mobile-sdk-core had on ui-core, and ui-core
+// depends on react and react-redux. So, by pulling these in here, we remove those dependencies.
+
+/**
+ * Get CSS variable
+ * @param variableName The name of the variable in CSS. Typically has "--" prefix.
+ * @param htmlElement The DOM node to read the variable value from, or undefined to use document.documentElement.
+ * @returns The value of the CSS variable.
+ * @public
+ */
+export function getCssVariable(variableName: string, htmlElement?: HTMLElement): string {
+  const element = htmlElement ?? document.documentElement;
+  const cssStyles = getComputedStyle(element, null);
+  const cssVal = String(cssStyles.getPropertyValue(variableName)).trim();
+  return cssVal;
+}
+
+/**
+ * Get CSS variable as number
+ * @param variableName The name of the variable in CSS. Typically has "--" prefix.
+ * @param htmlElement The DOM node to read the variable value from, or undefined to use document.documentElement.
+ * @returns The value of the CSS variable as a number, NaN if there is a problem reading the value.
+ * @public
+*/
+export function getCssVariableAsNumber(variableName: string, htmlElement?: HTMLElement): number {
+  let cssValNum: number = NaN;
+  const cssValStr = getCssVariable(variableName, htmlElement);
+  if (cssValStr)
+    cssValNum = parseFloat(cssValStr);
+  return cssValNum;
 }
