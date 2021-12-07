@@ -2,10 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { I18N } from "@bentley/imodeljs-i18n";
-import { BeUiEvent } from "@bentley/bentleyjs-core";
-import { LocalBriefcaseProps } from "@bentley/imodeljs-common";
-import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@bentley/imodeljs-frontend";
+import { BeUiEvent } from "@itwin/core-bentley";
+import { LocalBriefcaseProps, Localization } from "@itwin/core-common";
+import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@itwin/core-frontend";
 import { Messenger } from "./Messenger";
 import "./Geolocation"; // Just importing this activates the Polyfill.
 import "./MobileCore.scss";
@@ -61,7 +60,7 @@ interface UpdateSafeAreaArgs {
 
 /** Class for top-level MobileCore functionality. */
 export class MobileCore {
-  private static _i18n: I18N;
+  private static _localization: Localization;
   private static _isKeyboardVisible = false;
   private static _urlSearchParams: URLSearchParams | undefined;
 
@@ -84,7 +83,7 @@ export class MobileCore {
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
-    const result = this._i18n.translate(`iTwinMobileCore:${key}`, options);
+    const result = this._localization.getLocalizedStringWithNamespace("iTwinMobileCore", key, options);
     return result;
   }
 
@@ -94,11 +93,11 @@ export class MobileCore {
   }
 
   /** Initializes the MobileCore module.
-   * @param i18n - The [[I18N]] object (usually from iModelJs).
+   * @param localization - The [[Localization]] object (from iModelJs).
    */
-  public static async initialize(i18n: I18N): Promise<void> {
-    this._i18n = i18n;
-    i18n.registerNamespace("iTwinMobileCore");
+  public static async initialize(localization: Localization): Promise<void> {
+    this._localization = localization;
+    localization.registerNamespace("iTwinMobileCore");
     await Messenger.initialize();
     Messenger.onQuery("keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
     Messenger.onQuery("keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
@@ -227,7 +226,7 @@ export class MobileCore {
   public static async deleteCachedBriefcases(projectId?: string) {
     const briefcases = await NativeApp.getCachedBriefcases();
     for (const briefcase of briefcases) {
-      if (!projectId || projectId === briefcase.contextId) {
+      if (!projectId || projectId === briefcase.iTwinId) {
         await NativeApp.deleteBriefcase(briefcase.fileName);
       }
     }
@@ -369,9 +368,7 @@ export function getEmphasizeElements(): [ScreenViewport | undefined, EmphasizeEl
  * @returns An array consisting of all viewports registered with [[IModelApp.viewManager]].
  */
 export function getAllViewports() {
-  const viewports: ScreenViewport[] = [];
-  IModelApp.viewManager.forEachViewport((vp) => viewports.push(vp)); // eslint-disable-line deprecation/deprecation
-  return viewports;
+  return [...IModelApp.viewManager];
 }
 
 const anyWindow: any = window;
