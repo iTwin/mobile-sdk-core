@@ -97,7 +97,7 @@ export class MobileCore {
    */
   public static async initialize(localization: Localization): Promise<void> {
     this._localization = localization;
-    localization.registerNamespace("iTwinMobileCore");
+    await localization.registerNamespace("iTwinMobileCore");
     await Messenger.initialize();
     Messenger.onQuery("keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
     Messenger.onQuery("keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
