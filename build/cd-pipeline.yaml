@@ -1,11 +1,11 @@
 trigger:
-  - main
+  - itwin-3
 
 pr:
   drafts: false
   branches:
     include:
-      - main
+      - itwin-3
 
 name: $(date:yyyy.MM.dd)$(Rev:.r)
 
@@ -24,7 +24,7 @@ stages:
 - stage: PublishNpmjs
   displayName: Publish to Npmjs
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.Build.outputs['Build.checkPublish.shouldPublish'], 'true'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/itwin-3'), eq(dependencies.Build.outputs['Build.checkPublish.shouldPublish'], 'true'))
   variables:
     version: $[ stageDependencies.Build.Build.outputs['checkPublish.version'] ]
 
