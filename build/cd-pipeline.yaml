@@ -33,3 +33,4 @@ stages:
       parameters:
         path: itwin-mobile-sdk-core-$(version).tgz
         artifactName: tarball
+        releaseTag: next
