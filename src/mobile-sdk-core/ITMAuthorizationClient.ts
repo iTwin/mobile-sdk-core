@@ -12,7 +12,7 @@ export class ITMAuthorizationClient implements AuthorizationClient {
    * @returns A promise that resolves to a string representing the access token.
    */
   public async getAccessToken() {
-    return (await Messenger.query("Bentley_ITM_getAccessToken")) as string;
+    return (await Messenger.query("Bentley_ITMAuthorizationClient_getAccessToken")) as string;
   }
 
   /**
@@ -20,6 +20,6 @@ export class ITMAuthorizationClient implements AuthorizationClient {
    * @returns A promise that resolves to void.
    */
   public async signOut() {
-    return (await Messenger.query("Bentley_ITM_signOut")) as void;
+    return (await Messenger.query("Bentley_ITMAuthorizationClient_signOut")) as void;
   }
 }
