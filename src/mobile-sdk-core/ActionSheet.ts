@@ -23,6 +23,8 @@ export interface ActionSheetProps {
   actions: AlertActions;
   /** If set to true, prevents the default Cancel action from being added, default is false. */
   skipCancel?: boolean;
+  /** Whether or not to show the status bar during the alert, default is false. */
+  showStatusBar?: boolean;
 }
 
 /**
@@ -35,11 +37,12 @@ export interface ActionSheetProps {
  * @public
  */
 export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect) {
-  const { message, title, actions: propsActions, skipCancel = false } = props;
+  const { message, title, showStatusBar, actions: propsActions, skipCancel = false } = props;
   const actions = await extractAlertActions(propsActions);
   const messageData = {
     title,
     message,
+    showStatusBar,
     style: "actionSheet",
     sourceRect,
     actions: [...actions],
