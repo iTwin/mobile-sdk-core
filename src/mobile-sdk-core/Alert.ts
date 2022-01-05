@@ -69,7 +69,7 @@ export interface AlertProps {
  * @returns The array of AlertAction objects.
  */
 export async function extractAlertActions(alertActions: AlertActions) {
-  if (typeof alertActions == "function") {
+  if (typeof alertActions === "function") {
     return alertActions();
   } else {
     return alertActions;
