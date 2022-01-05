@@ -63,6 +63,7 @@ export class MobileCore {
   private static _localization: Localization;
   private static _isKeyboardVisible = false;
   private static _urlSearchParams: URLSearchParams | undefined;
+  private static _isInitialized = false;
 
   /** BeUiEvent emitted right before the software keyboard is shown. */
   public static onKeyboardWillShow = new BeUiEvent<KeyboardEventArgs>();
@@ -83,6 +84,9 @@ export class MobileCore {
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
+    if (this._localization === undefined) {
+      return `Attempt to translate ${key} before localization init.`;
+    }
     const result = this._localization.getLocalizedStringWithNamespace("iTwinMobileCore", key, options);
     return result;
   }
@@ -104,6 +108,15 @@ export class MobileCore {
     Messenger.onQuery("keyboardWillHide").setHandler(MobileCore._keyboardWillHide);
     Messenger.onQuery("keyboardDidHide").setHandler(MobileCore._keyboardDidHide);
     Messenger.onQuery("muiUpdateSafeAreas").setHandler(MobileCore._muiUpdateSafeAreas);
+    this._isInitialized = true;
+  }
+
+  /** Checks if MobileCore is initialized.
+   * @returns true if MobileCore is initialized, or fals otherwise.
+   * @public
+   */
+  public static get isInitialized() {
+    return this._isInitialized;
   }
 
   /** Sets a CSS variable and emits [[MobileCore.onCssVariableDidChange]] to indicate the change.

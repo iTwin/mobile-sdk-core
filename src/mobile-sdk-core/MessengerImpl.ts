@@ -67,7 +67,11 @@ export class MessengerImpl {
       }
       return parsedMessage;
     } else {
-      throw new Error(MobileCore.translate("messenger.query-response-error", { name }));
+      if (MobileCore.isInitialized) {
+        throw new Error(MobileCore.translate("messenger.query-response-error", { name }));
+      } else {
+        throw new Error(`Error returned from ${name} query.`);
+      }
     }
   }
 
