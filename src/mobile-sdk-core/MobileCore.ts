@@ -245,6 +245,15 @@ export class MobileCore {
     }
   }
 
+  /** Utility function to sleep for the specified number of milliseconds.
+   *
+   * @param ms Number of milliseconds to sleep.
+   * @returns A promise that fulfills after [[ms]] milliseconds.
+   */
+  public static async sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   private static _keyboardWillShow = async (args: KeyboardEventArgs) => {
     // Anything tracking the keyboard height probably has --mui-safe-area-bottom already included in its bottom margin
     // or padding, so subtract the size of the bottom safe area from the effective keyboard height.
