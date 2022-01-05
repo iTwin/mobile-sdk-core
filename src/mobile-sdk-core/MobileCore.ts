@@ -60,9 +60,21 @@ interface UpdateSafeAreaArgs {
 
 /** Class for top-level MobileCore functionality. */
 export class MobileCore {
+  /**
+   * @internal
+   */
   private static _localization: Localization;
+  /**
+   * @internal
+   */
   private static _isKeyboardVisible = false;
+  /**
+   * @internal
+   */
   private static _urlSearchParams: URLSearchParams | undefined;
+  /**
+   * @internal
+   */
   private static _isInitialized = false;
 
   /** BeUiEvent emitted right before the software keyboard is shown. */
@@ -172,7 +184,12 @@ export class MobileCore {
     return this._urlSearchParams;
   }
 
-  public static getUrlSearchParam(name: string) {
+  /** Gets the value of a URL search parameter.
+   * @param name The name of the URL search parameter to get
+   * @returns The value of the given URL search parameter, or undefined if it is not found.
+   * @public
+   */
+  public static getUrlSearchParam(name: string): string | undefined {
     const searchParams = this.urlSearchParams;
     const value = searchParams.get(name);
     if (value !== null) {
@@ -254,6 +271,9 @@ export class MobileCore {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /**
+   * @internal
+   */
   private static _keyboardWillShow = async (args: KeyboardEventArgs) => {
     // Anything tracking the keyboard height probably has --mui-safe-area-bottom already included in its bottom margin
     // or padding, so subtract the size of the bottom safe area from the effective keyboard height.
@@ -268,11 +288,17 @@ export class MobileCore {
     MobileCore.onKeyboardWillShow.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardDidShow = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = true;
     MobileCore.onKeyboardDidShow.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardWillHide = async (args: KeyboardEventArgs) => {
     MobileCore.setCssVariables([
       { name: "--mui-keyboard-height", value: "0px" },
@@ -284,6 +310,9 @@ export class MobileCore {
     MobileCore.onKeyboardWillHide.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardDidHide = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = false;
     MobileCore.onKeyboardDidHide.emit(args);
@@ -293,6 +322,9 @@ export class MobileCore {
     document.documentElement.scrollTop = 0;
   };
 
+  /**
+   * @internal
+   */
   private static _muiUpdateSafeAreas = async (args: UpdateSafeAreaArgs) => {
     const root = document.documentElement;
     for (const sideName in args) {
