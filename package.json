@@ -44,7 +44,8 @@
     "@itwin/core-quantity": "rc",
     "@itwin/presentation-common": "rc",
     "@itwin/presentation-frontend": "rc",
-    "@itwin/webgl-compatibility": "rc"
+    "@itwin/webgl-compatibility": "rc",
+    "base64-js": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
