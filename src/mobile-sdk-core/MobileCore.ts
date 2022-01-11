@@ -271,6 +271,36 @@ export class MobileCore {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /** Function to disable pointer events in all IModelApp viewports.
+   *
+   * @returns Value to pass into [[reenableViewportPointerEvents]] to reenabled the pointer events in the
+   *          viewports where they were disabled.
+   */
+  public static disableAllViewportPointerEvents(): unknown {
+    const disabledDivs: { div: HTMLDivElement, oldValue: string }[] = [];
+    for (const vp of IModelApp.viewManager) {
+      if (vp.parentDiv) {
+        const oldValue = vp.parentDiv.style.getPropertyValue("pointer-events");
+        if (oldValue !== "none") {
+          disabledDivs.push({div: vp.parentDiv, oldValue});
+          vp.parentDiv.style.setProperty("pointer-events", "none");
+        }
+      }
+    }
+    return disabledDivs;
+  }
+
+  /** Function to reenable pointer events disabled by [[disableAllViewportPointerEvents]].
+   *
+   * @param disabledDivs: Return value from [[disableAllViewportPointerEvents]].
+   */
+  public static reenableViewportPointerEvents(disabledDivs: unknown) {
+    if (!Array.isArray(disabledDivs)) return;
+    for (const disabledDiv of disabledDivs) {
+      disabledDiv.div.style.setProperty("pointer-events", disabledDiv.oldValue);
+    }
+  }
+
   /**
    * @internal
    */

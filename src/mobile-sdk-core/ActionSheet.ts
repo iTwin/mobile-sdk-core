@@ -62,7 +62,14 @@ export async function presentActionSheet(props: ActionSheetProps, sourceRect: DO
       style: ActionStyle.Cancel,
     });
   }
+  // Disable pointer events in all viewports for the duration that the action sheet is
+  // visible. Without this, if the user taps outside the popover, that tap can trigger an
+  // event (typically selection) in the viewport.
+  const disabledDivs = MobileCore.disableAllViewportPointerEvents();
+  // Send the query so the native code will display the action sheet, and wait for the result.
   const result: string | undefined = await Messenger.query("Bentley_ITM_presentActionSheet", messageData);
+  // Reenabled pointer events in all viewports where we disabled them above.
+  MobileCore.reenableViewportPointerEvents(disabledDivs);
   callOnSelected(result, actions);
   if (result === "itm_cancel") {
     return null;
