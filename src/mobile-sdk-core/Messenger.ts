@@ -22,7 +22,28 @@ class QueryContext {
  */
 export class MessageNotImplementedError extends Error {
   constructor(messageName?: string) {
-    super(`No handler for ${(messageName ?? "<Unknown>")} query.`);
+    if (MobileCore.isInitialized) {
+      const name = messageName ?? MobileCore.translate("messenger.unknown");
+      super(MobileCore.translate("messenger.query-not-handled-error", { name }));
+    } else {
+      const name = messageName ?? "<Unknown>";
+      super(`No handler for \"${name}\" query.`);
+    }
+  }
+}
+
+export class MessageJsonError extends Error {
+  public json: string;
+
+  constructor(json: string, message?: string) {
+    if (message !== undefined) {
+      super(message);
+    } else if (MobileCore.isInitialized) {
+      super(MobileCore.translate("messenger.json-error", { json }));
+    } else {
+      super(`Messenger JSON error: ${json}.`);
+    }
+    this.json = json;
   }
 }
 
@@ -30,6 +51,9 @@ export class MessageNotImplementedError extends Error {
  * @public
  */
 export class QueryHandler {
+  /**
+   * @internal
+   */
   private _handler?: QueryContext;
 
   /** Call to set the handler function for this query.
@@ -91,6 +115,9 @@ export class QueryHandler {
  * @public
  */
 export class Messenger {
+  /**
+   * @internal
+   */
   private static _impl: any;
   public static queryHandlers: { [name: string]: QueryHandler } = {};
 

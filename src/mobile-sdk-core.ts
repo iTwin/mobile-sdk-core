@@ -9,3 +9,4 @@ export * from "./mobile-sdk-core/UIError";
 export * from "./mobile-sdk-core/MobileCore";
 export * from "./mobile-sdk-core/Alert";
 export * from "./mobile-sdk-core/ActionSheet";
+export * from "./mobile-sdk-core/ITMAuthorizationClient";

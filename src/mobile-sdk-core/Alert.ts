@@ -55,6 +55,8 @@ export interface AlertProps {
   message?: string;
   /** List of actions in the presented alert box. Must contain at least one item. */
   actions: AlertActions;
+  /** Whether or not to show the status bar during the alert, default is false. */
+  showStatusBar?: boolean;
 }
 
 /**
@@ -67,7 +69,7 @@ export interface AlertProps {
  * @returns The array of AlertAction objects.
  */
 export async function extractAlertActions(alertActions: AlertActions) {
-  if (typeof alertActions == "function") {
+  if (typeof alertActions === "function") {
     return alertActions();
   } else {
     return alertActions;
@@ -85,11 +87,12 @@ export async function extractAlertActions(alertActions: AlertActions) {
  * @public
  */
 export async function presentAlert(props: AlertProps): Promise<string> {
-  const { title, message, actions: propsActions } = props;
+  const { title, message, showStatusBar, actions: propsActions } = props;
   const actions = await extractAlertActions(propsActions);
   const messageData = {
     title,
     message,
+    showStatusBar,
     actions: [...actions],
   };
   for (const action of messageData.actions) {

@@ -20,7 +20,7 @@ export class Base64Converter {
   /** Convert an array of Uint8 values representing a UTF-8 string into a JavaScript string.
    * @param utf8: Array of Uint8 values representing a UTF-8 string.
    * @returns JavaScript string corresponding to the UTF-8 data.
-   * @public
+   * @internal
    */
   private static utf8ToString(utf8: Uint8Array) {
     let s = "";

@@ -2,10 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { I18N } from "@bentley/imodeljs-i18n";
-import { BeUiEvent } from "@bentley/bentleyjs-core";
-import { LocalBriefcaseProps } from "@bentley/imodeljs-common";
-import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@bentley/imodeljs-frontend";
+import { BeUiEvent } from "@itwin/core-bentley";
+import { LocalBriefcaseProps, Localization } from "@itwin/core-common";
+import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@itwin/core-frontend";
 import { Messenger } from "./Messenger";
 import "./Geolocation"; // Just importing this activates the Polyfill.
 import "./MobileCore.scss";
@@ -61,9 +60,22 @@ interface UpdateSafeAreaArgs {
 
 /** Class for top-level MobileCore functionality. */
 export class MobileCore {
-  private static _i18n: I18N;
+  /**
+   * @internal
+   */
+  private static _localization: Localization;
+  /**
+   * @internal
+   */
   private static _isKeyboardVisible = false;
+  /**
+   * @internal
+   */
   private static _urlSearchParams: URLSearchParams | undefined;
+  /**
+   * @internal
+   */
+  private static _isInitialized = false;
 
   /** BeUiEvent emitted right before the software keyboard is shown. */
   public static onKeyboardWillShow = new BeUiEvent<KeyboardEventArgs>();
@@ -84,7 +96,10 @@ export class MobileCore {
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
-    const result = this._i18n.translate(`iTwinMobileCore:${key}`, options);
+    if (this._localization === undefined) {
+      return `Attempt to translate ${key} before localization init.`;
+    }
+    const result = this._localization.getLocalizedStringWithNamespace("iTwinMobileCore", key, options);
     return result;
   }
 
@@ -94,17 +109,26 @@ export class MobileCore {
   }
 
   /** Initializes the MobileCore module.
-   * @param i18n - The [[I18N]] object (usually from iModelJs).
+   * @param localization - The [[Localization]] object (from iModelJs).
    */
-  public static async initialize(i18n: I18N): Promise<void> {
-    this._i18n = i18n;
-    i18n.registerNamespace("iTwinMobileCore");
+  public static async initialize(localization: Localization): Promise<void> {
+    this._localization = localization;
+    await localization.registerNamespace("iTwinMobileCore");
     await Messenger.initialize();
     Messenger.onQuery("keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
     Messenger.onQuery("keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
     Messenger.onQuery("keyboardWillHide").setHandler(MobileCore._keyboardWillHide);
     Messenger.onQuery("keyboardDidHide").setHandler(MobileCore._keyboardDidHide);
     Messenger.onQuery("muiUpdateSafeAreas").setHandler(MobileCore._muiUpdateSafeAreas);
+    this._isInitialized = true;
+  }
+
+  /** Checks if MobileCore is initialized.
+   * @returns true if MobileCore is initialized, or fals otherwise.
+   * @public
+   */
+  public static get isInitialized() {
+    return this._isInitialized;
   }
 
   /** Sets a CSS variable and emits [[MobileCore.onCssVariableDidChange]] to indicate the change.
@@ -160,7 +184,12 @@ export class MobileCore {
     return this._urlSearchParams;
   }
 
-  public static getUrlSearchParam(name: string) {
+  /** Gets the value of a URL search parameter.
+   * @param name The name of the URL search parameter to get
+   * @returns The value of the given URL search parameter, or undefined if it is not found.
+   * @public
+   */
+  public static getUrlSearchParam(name: string): string | undefined {
     const searchParams = this.urlSearchParams;
     const value = searchParams.get(name);
     if (value !== null) {
@@ -227,12 +256,54 @@ export class MobileCore {
   public static async deleteCachedBriefcases(projectId?: string) {
     const briefcases = await NativeApp.getCachedBriefcases();
     for (const briefcase of briefcases) {
-      if (!projectId || projectId === briefcase.contextId) {
+      if (!projectId || projectId === briefcase.iTwinId) {
         await NativeApp.deleteBriefcase(briefcase.fileName);
       }
     }
   }
 
+  /** Utility function to sleep for the specified number of milliseconds.
+   *
+   * @param ms Number of milliseconds to sleep.
+   * @returns A promise that fulfills after [[ms]] milliseconds.
+   */
+  public static async sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /** Function to disable pointer events in all IModelApp viewports.
+   *
+   * @returns Value to pass into [[reenableViewportPointerEvents]] to reenabled the pointer events in the
+   *          viewports where they were disabled.
+   */
+  public static disableAllViewportPointerEvents(): unknown {
+    const disabledDivs: { div: HTMLDivElement, oldValue: string }[] = [];
+    for (const vp of IModelApp.viewManager) {
+      if (vp.parentDiv) {
+        const oldValue = vp.parentDiv.style.getPropertyValue("pointer-events");
+        if (oldValue !== "none") {
+          disabledDivs.push({div: vp.parentDiv, oldValue});
+          vp.parentDiv.style.setProperty("pointer-events", "none");
+        }
+      }
+    }
+    return disabledDivs;
+  }
+
+  /** Function to reenable pointer events disabled by [[disableAllViewportPointerEvents]].
+   *
+   * @param disabledDivs: Return value from [[disableAllViewportPointerEvents]].
+   */
+  public static reenableViewportPointerEvents(disabledDivs: unknown) {
+    if (!Array.isArray(disabledDivs)) return;
+    for (const disabledDiv of disabledDivs) {
+      disabledDiv.div.style.setProperty("pointer-events", disabledDiv.oldValue);
+    }
+  }
+
+  /**
+   * @internal
+   */
   private static _keyboardWillShow = async (args: KeyboardEventArgs) => {
     // Anything tracking the keyboard height probably has --mui-safe-area-bottom already included in its bottom margin
     // or padding, so subtract the size of the bottom safe area from the effective keyboard height.
@@ -247,11 +318,17 @@ export class MobileCore {
     MobileCore.onKeyboardWillShow.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardDidShow = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = true;
     MobileCore.onKeyboardDidShow.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardWillHide = async (args: KeyboardEventArgs) => {
     MobileCore.setCssVariables([
       { name: "--mui-keyboard-height", value: "0px" },
@@ -263,6 +340,9 @@ export class MobileCore {
     MobileCore.onKeyboardWillHide.emit(args);
   };
 
+  /**
+   * @internal
+   */
   private static _keyboardDidHide = async (args: KeyboardEventArgs) => {
     MobileCore._isKeyboardVisible = false;
     MobileCore.onKeyboardDidHide.emit(args);
@@ -272,6 +352,9 @@ export class MobileCore {
     document.documentElement.scrollTop = 0;
   };
 
+  /**
+   * @internal
+   */
   private static _muiUpdateSafeAreas = async (args: UpdateSafeAreaArgs) => {
     const root = document.documentElement;
     for (const sideName in args) {
@@ -369,9 +452,7 @@ export function getEmphasizeElements(): [ScreenViewport | undefined, EmphasizeEl
  * @returns An array consisting of all viewports registered with [[IModelApp.viewManager]].
  */
 export function getAllViewports() {
-  const viewports: ScreenViewport[] = [];
-  IModelApp.viewManager.forEachViewport((vp) => viewports.push(vp)); // eslint-disable-line deprecation/deprecation
-  return viewports;
+  return [...IModelApp.viewManager];
 }
 
 const anyWindow: any = window;

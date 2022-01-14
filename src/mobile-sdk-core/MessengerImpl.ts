@@ -3,8 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { Base64Converter } from "./Base64Converter";
-import { MessageNotImplementedError, Messenger } from "./Messenger";
-import { MobileCore } from "./MobileCore";
+import { MessageJsonError, MessageNotImplementedError, Messenger, QueryHandler } from "./Messenger";
 import { UIError } from "./UIError";
 
 // MessengerImpl implementation that works with iOS and Android.
@@ -17,9 +16,21 @@ import { UIError } from "./UIError";
  * @internal
  */
 export class MessengerImpl {
+  /**
+   * @internal
+   */
   private static _anyWindow: any = window;
+  /**
+   * @internal
+   */
   private static _queryId = 0;
+  /**
+   * @internal
+   */
   private static _queryResponse: (responseJson: string) => void;
+  /**
+   * @internal
+   */
   private static _query: (messageJson: string) => void;
 
   public static initialize() {
@@ -65,14 +76,25 @@ export class MessengerImpl {
       } catch (ex) {
         // ignore
       }
-      return parsedMessage;
-    } else {
-      throw new Error(MobileCore.translate("messenger.query-response-error", { name }));
+      if (parsedMessage.unhandled) {
+        throw new MessageNotImplementedError(name);
+      } else if (parsedMessage.error !== undefined) {
+        const error = parsedMessage.error;
+        if (typeof error === "string") {
+          throw new Error(parsedMessage.error);
+        } else {
+          throw new MessageJsonError(JSON.stringify(error));
+        }
+      }
+      return parsedMessage.response;
     }
   }
 
+  /**
+   * @internal
+   */
   private static async receiveQuery(name: string, messageJson: string) {
-    const queryHandler = Messenger.queryHandlers[name];
+    const queryHandler: QueryHandler = Messenger.queryHandlers[name];
     if (queryHandler) {
       let message;
       try {
