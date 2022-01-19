@@ -305,15 +305,15 @@ export class MobileCore {
    * @internal
    */
   private static _keyboardWillShow = async (args: KeyboardEventArgs) => {
-    // Anything tracking the keyboard height probably has --mui-safe-area-bottom already included in its bottom margin
+    // Anything tracking the keyboard height probably has --itm-safe-area-bottom already included in its bottom margin
     // or padding, so subtract the size of the bottom safe area from the effective keyboard height.
-    const effectiveHeight = args.height - getCssVariableAsNumber("--mui-safe-area-bottom");
+    const effectiveHeight = args.height - getCssVariableAsNumber("--itm-safe-area-bottom");
     MobileCore.setCssVariables([
-      { name: "--mui-keyboard-height", value: `${args.height}px` },
-      { name: "--mui-keyboard-effective-height", value: `${effectiveHeight}px` },
-      { name: "--mui-keyboard-animation-duration", value: `${args.duration}s` },
+      { name: "--itm-keyboard-height", value: `${args.height}px` },
+      { name: "--itm-keyboard-effective-height", value: `${effectiveHeight}px` },
+      { name: "--itm-keyboard-animation-duration", value: `${args.duration}s` },
       // When the software keyboard is visible, the bottom of the usable screen has no safe area.
-      { name: "--mui-safe-area-bottom-over-keyboard", value: "0px" },
+      { name: "--itm-safe-area-bottom-over-keyboard", value: "0px" },
     ]);
     MobileCore.onKeyboardWillShow.emit(args);
   };
@@ -331,11 +331,11 @@ export class MobileCore {
    */
   private static _keyboardWillHide = async (args: KeyboardEventArgs) => {
     MobileCore.setCssVariables([
-      { name: "--mui-keyboard-height", value: "0px" },
-      { name: "--mui-keyboard-effective-height", value: "0px" },
-      { name: "--mui-keyboard-animation-duration", value: `${args.duration}s` },
+      { name: "--itm-keyboard-height", value: "0px" },
+      { name: "--itm-keyboard-effective-height", value: "0px" },
+      { name: "--itm-keyboard-animation-duration", value: `${args.duration}s` },
       // When the software keyboard is not visible, the bottom of the visible screen can have a safe area.
-      { name: "--mui-safe-area-bottom-over-keyboard", value: "var(--mui-safe-area-bottom)" },
+      { name: "--itm-safe-area-bottom-over-keyboard", value: "var(--itm-safe-area-bottom)" },
     ]);
     MobileCore.onKeyboardWillHide.emit(args);
   };
@@ -359,7 +359,7 @@ export class MobileCore {
     const root = document.documentElement;
     for (const sideName in args) {
       if (args.hasOwnProperty(sideName)) {
-        const key = `--mui-safe-area-${sideName}`;
+        const key = `--itm-safe-area-${sideName}`;
         const value = `${((args as any)[sideName]).toString()}px`;
         root.style.setProperty(key, value);
       }
@@ -396,7 +396,7 @@ export function getCssVariableAsNumberOrDefault(variable: string, defaultValue =
  * @returns The size of the safe area on the specified screen edge.
  */
 export function getSafeAreaInset(edge: ScreenEdge) {
-  const variableName = `--mui-safe-area-${edge}`;
+  const variableName = `--itm-safe-area-${edge}`;
   const sai = parseInt(getComputedStyle(document.documentElement).getPropertyValue(variableName).trim(), 10);
   return isNaN(sai) ? 0 : sai;
 }

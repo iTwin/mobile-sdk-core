@@ -3,18 +3,17 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 :root {
-  --mui-keyboard-height: 0px;
-  --mui-keyboard-effective-height: 0px;
-  --mui-keyboard-animation-duration: .25s;
-  --mui-fade-duration: .5s;
+  --itm-keyboard-height: 0px;
+  --itm-keyboard-effective-height: 0px;
+  --itm-keyboard-animation-duration: .25s;
   /* Safe Area */
-  --mui-safe-area-top: constant(safe-area-inset-top);
-  --mui-safe-area-top: env(safe-area-inset-top);
-  --mui-safe-area-left: constant(safe-area-inset-left);
-  --mui-safe-area-left: env(safe-area-inset-left);
-  --mui-safe-area-bottom: constant(safe-area-inset-bottom);
-  --mui-safe-area-bottom: env(safe-area-inset-bottom);
-  --mui-safe-area-right: constant(safe-area-inset-right);
-  --mui-safe-area-right: env(safe-area-inset-right);
-  --mui-safe-area-bottom-over-keyboard: var(--mui-safe-area-bottom);
+  --itm-safe-area-top: constant(safe-area-inset-top);
+  --itm-safe-area-top: env(safe-area-inset-top);
+  --itm-safe-area-left: constant(safe-area-inset-left);
+  --itm-safe-area-left: env(safe-area-inset-left);
+  --itm-safe-area-bottom: constant(safe-area-inset-bottom);
+  --itm-safe-area-bottom: env(safe-area-inset-bottom);
+  --itm-safe-area-right: constant(safe-area-inset-right);
+  --itm-safe-area-right: env(safe-area-inset-right);
+  --itm-safe-area-bottom-over-keyboard: var(--itm-safe-area-bottom);
 }
