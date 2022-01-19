@@ -115,11 +115,11 @@ export class MobileCore {
     this._localization = localization;
     await localization.registerNamespace("iTwinMobileCore");
     await Messenger.initialize();
-    Messenger.onQuery("keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
-    Messenger.onQuery("keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
-    Messenger.onQuery("keyboardWillHide").setHandler(MobileCore._keyboardWillHide);
-    Messenger.onQuery("keyboardDidHide").setHandler(MobileCore._keyboardDidHide);
-    Messenger.onQuery("muiUpdateSafeAreas").setHandler(MobileCore._muiUpdateSafeAreas);
+    Messenger.onQuery("Bentley_ITM_keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
+    Messenger.onQuery("Bentley_ITM_keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
+    Messenger.onQuery("Bentley_ITM_keyboardWillHide").setHandler(MobileCore._keyboardWillHide);
+    Messenger.onQuery("Bentley_ITM_keyboardDidHide").setHandler(MobileCore._keyboardDidHide);
+    Messenger.onQuery("Bentley_ITM_muiUpdateSafeAreas").setHandler(MobileCore._muiUpdateSafeAreas);
     this._isInitialized = true;
   }
 
