@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ResponseError } from "@bentley/itwin-client";
+import { ResponseError } from "@itwin/core-frontend/lib/cjs/request/Request";
 import { MessageNotImplementedError } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
