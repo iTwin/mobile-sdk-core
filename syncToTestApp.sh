@@ -14,8 +14,8 @@ if [ "$1" != "" ]; then
   appDir=$1
 elif [ "$ITM_TEST_APP_DIR" != "" ]; then
   appDir=$ITM_TEST_APP_DIR
-elif [ -d "../mobile-sdk-samples/iOS/MobileStarter/react-app" ]; then
-  appDir=../mobile-sdk-samples/iOS/MobileStarter/react-app
+elif [ -d "../mobile-samples/iOS/MobileStarter/react-app" ]; then
+  appDir=../mobile-samples/iOS/MobileStarter/react-app
 fi
 
 sync_to_dest $appDir
