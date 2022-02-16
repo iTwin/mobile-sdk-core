@@ -185,6 +185,8 @@ export class MobileCore {
   }
 
   /** Gets the value of a URL search parameter.
+   *
+   * _Note:_ If the search parameter has a value, it is passed through decodeURIComponent to remove any URI encoding.
    * @param name The name of the URL search parameter to get
    * @returns The value of the given URL search parameter, or undefined if it is not found.
    * @public
@@ -193,7 +195,7 @@ export class MobileCore {
     const searchParams = this.urlSearchParams;
     const value = searchParams.get(name);
     if (value !== null) {
-      return value;
+      return decodeURIComponent(value);
     }
     return undefined;
   }
