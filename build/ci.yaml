@@ -22,7 +22,7 @@ jobs:
         pkgName=$(node -p "require('./package.json').name")
         pkgVer=$(node -p "require('./package.json').version")
 
-        ver=$(npm view $pkgName version)
+        ver=$(npm view $pkgName versions --json | grep '"0\.10\.' | cut -d\" -f2 | sort -V | tail -1)
 
         if [ -z "$ver" ]; then
           ver=0.0.0
