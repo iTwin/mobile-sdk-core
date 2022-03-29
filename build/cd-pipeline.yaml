@@ -24,7 +24,7 @@ stages:
 - stage: PublishNpmjs
   displayName: Publish to Npmjs
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.Build.outputs['Build.checkPublish.shouldPublish'], 'true'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.Build.outputs['Build.checkPublish.canPublish'], 'true'), eq(variables['shouldPublish'], 'true'))
   variables:
     version: $[ stageDependencies.Build.Build.outputs['checkPublish.version'] ]
 
