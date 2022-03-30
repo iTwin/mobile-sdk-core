@@ -22,6 +22,9 @@ resources:
       name: iTwin/mobile-samples
       ref: main
       endpoint: iModelJs
+    - repository: build-pipeline-scripts
+      type: git
+      name: iModelTechnologies/imodeljs-build-pipeline-scripts
 
 stages:
 - stage: Stage1
@@ -42,10 +45,10 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
           displayName: newVersion.py stage1
 
-# - template: cd-pipeline.yaml
+- template: cd-stages.yaml
 
 - stage: Stage2
   displayName: Run newVersion.py stage2
@@ -65,10 +68,10 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
           displayName: newVersion.py stage2
 
-# - template: build/cd-pipeline.yaml@mobile-ui-react
+- template: build/cd-stages.yaml@mobile-ui-react
 
 - stage: Stage3
   displayName: Run newVersion.py stage3
@@ -88,5 +91,5 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
           displayName: newVersion.py stage3
