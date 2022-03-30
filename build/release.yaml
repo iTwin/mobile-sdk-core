@@ -45,8 +45,16 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
-          displayName: newVersion.py stage1
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.x
+
+        - task: PythonScript@0
+          displayName: Stage1
+          inputs:
+            scriptSource: filePath
+            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
+            arguments: stage1
 
 - template: cd-stages.yaml
 
@@ -68,8 +76,16 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
-          displayName: newVersion.py stage2
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.x
+
+        - task: PythonScript@0
+          displayName: Stage2
+          inputs:
+            scriptSource: filePath
+            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
+            arguments: stage2
 
 - template: build/cd-stages.yaml@mobile-ui-react
 
@@ -91,5 +107,13 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
-          displayName: newVersion.py stage3
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.x
+
+        - task: PythonScript@0
+          displayName: Stage3
+          inputs:
+            scriptSource: filePath
+            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
+            arguments: stage3
