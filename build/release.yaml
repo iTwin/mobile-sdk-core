@@ -1,6 +1,10 @@
 trigger: none
 pr: none
 
+variables:
+  - name: shouldPublish
+    value: true
+
 resources:
   repositories:
     - repository: mobile-sdk-ios
@@ -18,10 +22,6 @@ resources:
       name: iTwin/mobile-samples
       ref: main
       endpoint: iModelJs
-
-variables:
-- name: shouldPublish
-  value: true
 
 stages:
 - stage: Run newVersion.py stage1
