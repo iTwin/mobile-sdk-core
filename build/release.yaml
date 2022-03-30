@@ -1,8 +1,5 @@
-trigger:
-  - none
-
-pr:
-  - none
+trigger: none
+pr: none
 
 resources:
   repositories:
