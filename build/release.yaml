@@ -1,33 +1,34 @@
 trigger: none
 pr: none
 
+variables:
+  - name: shouldPublish
+    value: true
+
 resources:
   repositories:
     - repository: mobile-sdk-ios
       type: github
       name: iTwin/mobile-sdk-ios
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
     - repository: mobile-ui-react
       type: github
       name: iTwin/mobile-ui-react
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
     - repository: mobile-samples
       type: github
       name: iTwin/mobile-samples
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
 
-variables:
-- name: shouldPublish
-  value: true
 
 stages:
-- stage: Run newVersion.py stage1
+- stage: Stage1
   displayName: Run newVersion.py stage1
   jobs:
-    - job: stage1
+    - job: Stage1Job1
       displayName: Run newVersion.py stage1
       pool:
         vmImage: ubuntu-latest
@@ -42,20 +43,21 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
-          displayName: newVersion.py stage1
+        # - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
+        #   displayName: newVersion.py stage1
+        - script: echo Stage1
 
-- stage: Publish mobile-sdk-core
-  displayName: Publish mobile-sdk-core
-  dependsOn: Stage1
-  jobs:
-    - template: cd-pipeline.yaml
+# - stage: PublishMobileSDKCore
+#   displayName: Publish mobile-sdk-core
+#   dependsOn: Stage1
+#   jobs:
+#     - template: cd-pipeline.yaml
 
-- stage: Run newVersion.py stage2
+- stage: Stage2
   displayName: Run newVersion.py stage2
-  dependsOn: Publish mobile-sdk-core
+  dependsOn: PublishMobileSDKCore
   jobs:
-    - job: stage2
+    - job: Stage2Job1
       displayName: Run newVersion.py stage2
       pool:
         vmImage: ubuntu-latest
@@ -70,18 +72,19 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
-          displayName: newVersion.py stage2
+        # - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
+        #   displayName: newVersion.py stage2
+        - script: echo Stage2
 
-- stage: Publish mobile-ui-react
-  displayName: Publish mobile-ui-react
-  dependsOn: Stage2
-  jobs:
-    - template: build/cd-pipeline.yaml@mobile-ui-react
+# - stage: PublishMobileUIReact
+#   displayName: Publish mobile-ui-react
+#   dependsOn: Stage2
+#   jobs:
+#     - template: build/cd-pipeline.yaml@mobile-ui-react
 
-- stage: Run newVersion.py stage3
+- stage: Stage3
   displayName: Run newVersion.py stage3
-  dependsOn: Publish mobile-ui-react
+  dependsOn: PublishMobileUIReact
   jobs:
     - job: stage3
       displayName: Run newVersion.py stage3
@@ -98,5 +101,6 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
-          displayName: newVersion.py stage3
+        # - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
+        #   displayName: newVersion.py stage3
+        - script: echo Stage3
