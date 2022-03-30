@@ -19,8 +19,6 @@ resources:
       ref: main
       endpoint: iTwin (4)
 
-pool:
-  vmImage: ubuntu-latest
 
 variables:
 - name: shouldPublish
@@ -31,6 +29,15 @@ stages:
   displayName: Checkout
   jobs:
     - job: Checkout
+
+- stage: Run newVersion.py stage1
+  displayName: Run newVersion.py stage1
+  dependsOn: Checkout
+  jobs:
+    - job: stage1
+      displayName: Run newVersion.py stage1
+      pool:
+        vmImage: ubuntu-latest
       steps:
         - checkout: self
         - checkout: mobile-sdk-ios
@@ -42,13 +49,6 @@ stages:
           inputs:
             versionSpec: 16.x
 
-- stage: Run newVersion.py stage1
-  displayName: Run newVersion.py stage1
-  dependsOn: Checkout
-  jobs:
-    - job: stage1
-      displayName: Run newVersion.py stage1
-      steps:
         - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
           displayName: newVersion.py stage1
 
@@ -64,7 +64,19 @@ stages:
   jobs:
     - job: stage2
       displayName: Run newVersion.py stage2
+      pool:
+        vmImage: ubuntu-latest
       steps:
+        - checkout: self
+        - checkout: mobile-sdk-ios
+        - checkout: mobile-ui-react
+        - checkout: mobile-samples
+
+        - task: NodeTool@0
+          displayName: Use Node 16.x
+          inputs:
+            versionSpec: 16.x
+
         - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
           displayName: newVersion.py stage2
 
@@ -80,6 +92,18 @@ stages:
   jobs:
     - job: stage3
       displayName: Run newVersion.py stage3
+      pool:
+        vmImage: ubuntu-latest
       steps:
+        - checkout: self
+        - checkout: mobile-sdk-ios
+        - checkout: mobile-ui-react
+        - checkout: mobile-samples
+
+        - task: NodeTool@0
+          displayName: Use Node 16.x
+          inputs:
+            versionSpec: 16.x
+
         - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
           displayName: newVersion.py stage3
