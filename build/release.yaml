@@ -1,8 +1,8 @@
 trigger:
-  none
+  - none
 
 pr:
-  none
+  - none
 
 resources:
   repositories:
