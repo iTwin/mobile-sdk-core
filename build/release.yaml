@@ -49,13 +49,13 @@ stages:
 
 # - stage: PublishMobileSDKCore
 #   displayName: Publish mobile-sdk-core
-#   dependsOn: Stage1
+#   dependsOn: 
 #   jobs:
 #     - template: cd-pipeline.yaml
 
 - stage: Stage2
   displayName: Run newVersion.py stage2
-  dependsOn: PublishMobileSDKCore
+  dependsOn: Stage1
   jobs:
     - job: Stage2Job1
       displayName: Run newVersion.py stage2
@@ -84,9 +84,9 @@ stages:
 
 - stage: Stage3
   displayName: Run newVersion.py stage3
-  dependsOn: PublishMobileUIReact
+  dependsOn: Stage2
   jobs:
-    - job: stage3
+    - job: Stage3Job1
       displayName: Run newVersion.py stage3
       pool:
         vmImage: ubuntu-latest
