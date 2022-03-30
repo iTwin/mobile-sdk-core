@@ -21,7 +21,7 @@ stages:
   jobs:
     - template: ci.yaml
 
-- stage: PublishNpmjs
+- stage: PublishCoreNpmjs
   displayName: Publish to Npmjs
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.Build.outputs['Build.checkPublish.canPublish'], 'true'), eq(variables['shouldPublish'], 'true'))
