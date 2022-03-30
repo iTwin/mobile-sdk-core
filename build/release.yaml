@@ -42,10 +42,10 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
+        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
           displayName: newVersion.py stage1
 
-- template: cd-pipeline.yaml
+# - template: cd-pipeline.yaml
 
 - stage: Run newVersion.py stage2
   displayName: Run newVersion.py stage2
@@ -65,10 +65,10 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
+        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
           displayName: newVersion.py stage2
 
-- template: build/cd-pipeline.yaml@mobile-ui-react
+# - template: build/cd-pipeline.yaml@mobile-ui-react
 
 - stage: Run newVersion.py stage3
   displayName: Run newVersion.py stage3
@@ -88,5 +88,5 @@ stages:
           inputs:
             versionSpec: 16.x
 
-        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
+        - script: echo $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
           displayName: newVersion.py stage3
