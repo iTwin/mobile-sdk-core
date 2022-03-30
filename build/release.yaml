@@ -7,17 +7,17 @@ resources:
       type: github
       name: iTwin/mobile-sdk-ios
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
     - repository: mobile-ui-react
       type: github
       name: iTwin/mobile-ui-react
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
     - repository: mobile-samples
       type: github
       name: iTwin/mobile-samples
       ref: main
-      endpoint: iTwin (4)
+      endpoint: iModelJs
 
 variables:
 - name: shouldPublish
@@ -45,15 +45,10 @@ stages:
         - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
           displayName: newVersion.py stage1
 
-- stage: Publish mobile-sdk-core
-  displayName: Publish mobile-sdk-core
-  dependsOn: Stage1
-  jobs:
-    - template: cd-pipeline.yaml
+- template: cd-pipeline.yaml
 
 - stage: Run newVersion.py stage2
   displayName: Run newVersion.py stage2
-  dependsOn: Publish mobile-sdk-core
   jobs:
     - job: stage2
       displayName: Run newVersion.py stage2
@@ -73,15 +68,10 @@ stages:
         - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
           displayName: newVersion.py stage2
 
-- stage: Publish mobile-ui-react
-  displayName: Publish mobile-ui-react
-  dependsOn: Stage2
-  jobs:
-    - template: build/cd-pipeline.yaml@mobile-ui-react
+- template: build/cd-pipeline.yaml@mobile-ui-react
 
 - stage: Run newVersion.py stage3
   displayName: Run newVersion.py stage3
-  dependsOn: Publish mobile-ui-react
   jobs:
     - job: stage3
       displayName: Run newVersion.py stage3
