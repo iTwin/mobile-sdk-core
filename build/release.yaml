@@ -7,14 +7,17 @@ resources:
       type: github
       name: iTwin/mobile-sdk-ios
       ref: main
+      endpoint: iTwin (4)
     - repository: mobile-ui-react
       type: github
       name: iTwin/mobile-ui-react
       ref: main
+      endpoint: iTwin (4)
     - repository: mobile-samples
       type: github
       name: iTwin/mobile-samples
       ref: main
+      endpoint: iTwin (4)
 
 pool:
   vmImage: ubuntu-latest
