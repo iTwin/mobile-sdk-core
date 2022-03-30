@@ -26,7 +26,6 @@ variables:
 stages:
 - stage: Run newVersion.py stage1
   displayName: Run newVersion.py stage1
-  dependsOn: Checkout
   jobs:
     - job: stage1
       displayName: Run newVersion.py stage1
