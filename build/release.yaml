@@ -1,3 +1,6 @@
+trigger: none
+pr: none
+
 resources:
   repositories:
     - repository: mobile-sdk-ios
@@ -23,28 +26,28 @@ variables:
 stages:
 - stage: Checkout
   displayName: Checkout
-  steps:
-    - checkout: self
-      clean: all
-    - checkout: mobile-sdk-ios
-      clean: all
-    - checkout: mobile-ui-react
-      clean: all
-    - checkout: mobile-samples
-      clean: all
+  jobs:
+    - job: Checkout
+      steps:
+        - checkout: self
+        - checkout: mobile-sdk-ios
+        - checkout: mobile-ui-react
+        - checkout: mobile-samples
 
-    - task: NodeTool@0
-      displayName: Use Node 16.x
-      inputs:
-        versionSpec: 16.x
-        latest: true
+        - task: NodeTool@0
+          displayName: Use Node 16.x
+          inputs:
+            versionSpec: 16.x
 
 - stage: Run newVersion.py stage1
   displayName: Run newVersion.py stage1
   dependsOn: Checkout
-  steps:
-    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
-      displayName: newVersion.py stage1
+  jobs:
+    - job: stage1
+      displayName: Run newVersion.py stage1
+      steps:
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
+          displayName: newVersion.py stage1
 
 - stage: Publish mobile-sdk-core
   displayName: Publish mobile-sdk-core
@@ -55,9 +58,12 @@ stages:
 - stage: Run newVersion.py stage2
   displayName: Run newVersion.py stage2
   dependsOn: Publish mobile-sdk-core
-  steps:
-    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
-      displayName: newVersion.py stage2
+  jobs:
+    - job: stage2
+      displayName: Run newVersion.py stage2
+      steps:
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
+          displayName: newVersion.py stage2
 
 - stage: Publish mobile-ui-react
   displayName: Publish mobile-ui-react
@@ -68,6 +74,9 @@ stages:
 - stage: Run newVersion.py stage3
   displayName: Run newVersion.py stage3
   dependsOn: Publish mobile-ui-react
-  steps:
-    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
-      displayName: newVersion.py stage3
+  jobs:
+    - job: stage3
+      displayName: Run newVersion.py stage3
+      steps:
+        - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
+          displayName: newVersion.py stage3
