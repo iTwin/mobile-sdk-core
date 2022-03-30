@@ -1,0 +1,73 @@
+resources:
+  repositories:
+    - repository: mobile-sdk-ios
+      type: github
+      name: iTwin/mobile-sdk-ios
+      ref: main
+    - repository: mobile-ui-react
+      type: github
+      name: iTwin/mobile-ui-react
+      ref: main
+    - repository: mobile-samples
+      type: github
+      name: iTwin/mobile-samples
+      ref: main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: shouldPublish
+  value: true
+
+stages:
+- stage: Checkout
+  displayName: Checkout
+  steps:
+    - checkout: self
+      clean: all
+    - checkout: mobile-sdk-ios
+      clean: all
+    - checkout: mobile-ui-react
+      clean: all
+    - checkout: mobile-samples
+      clean: all
+
+    - task: NodeTool@0
+      displayName: Use Node 16.x
+      inputs:
+        versionSpec: 16.x
+        latest: true
+
+- stage: Run newVersion.py stage1
+  displayName: Run newVersion.py stage1
+  dependsOn: Checkout
+  steps:
+    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage1
+      displayName: newVersion.py stage1
+
+- stage: Publish mobile-sdk-core
+  displayName: Publish mobile-sdk-core
+  dependsOn: Stage1
+  jobs:
+    - template: cd-pipeline.yaml
+
+- stage: Run newVersion.py stage2
+  displayName: Run newVersion.py stage2
+  dependsOn: Publish mobile-sdk-core
+  steps:
+    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage2
+      displayName: newVersion.py stage2
+
+- stage: Publish mobile-ui-react
+  displayName: Publish mobile-ui-react
+  dependsOn: Stage2
+  jobs:
+    - template: build/cd-pipeline.yaml@mobile-ui-react
+
+- stage: Run newVersion.py stage3
+  displayName: Run newVersion.py stage3
+  dependsOn: Publish mobile-ui-react
+  steps:
+    - script: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py stage3
+      displayName: newVersion.py stage3
