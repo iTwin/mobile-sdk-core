@@ -49,6 +49,11 @@ stages:
           inputs:
             versionSpec: 3.x
 
+        - bash: |
+            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --local user.name "Travis Cobbs"
+          displayName: Setup Git
+
         - task: PythonScript@0
           displayName: Stage1
           inputs:
@@ -80,6 +85,11 @@ stages:
           inputs:
             versionSpec: 3.x
 
+        - bash: |
+            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --local user.name "Travis Cobbs"
+          displayName: Setup Git
+
         - task: PythonScript@0
           displayName: Stage2
           inputs:
@@ -110,6 +120,11 @@ stages:
         - task: UsePythonVersion@0
           inputs:
             versionSpec: 3.x
+
+        - bash: |
+            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --local user.name "Travis Cobbs"
+          displayName: Setup Git
 
         - task: PythonScript@0
           displayName: Stage3
