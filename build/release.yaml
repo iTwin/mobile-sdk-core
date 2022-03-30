@@ -24,10 +24,10 @@ resources:
       endpoint: iModelJs
 
 stages:
-- stage: Run newVersion.py stage1
+- stage: Stage1
   displayName: Run newVersion.py stage1
   jobs:
-    - job: stage1
+    - job: Stage1Job
       displayName: Run newVersion.py stage1
       pool:
         vmImage: ubuntu-latest
@@ -47,10 +47,10 @@ stages:
 
 # - template: cd-pipeline.yaml
 
-- stage: Run newVersion.py stage2
+- stage: Stage2
   displayName: Run newVersion.py stage2
   jobs:
-    - job: stage2
+    - job: Stage2Job
       displayName: Run newVersion.py stage2
       pool:
         vmImage: ubuntu-latest
@@ -70,10 +70,10 @@ stages:
 
 # - template: build/cd-pipeline.yaml@mobile-ui-react
 
-- stage: Run newVersion.py stage3
+- stage: Stage3
   displayName: Run newVersion.py stage3
   jobs:
-    - job: stage3
+    - job: Stage3Job
       displayName: Run newVersion.py stage3
       pool:
         vmImage: ubuntu-latest
