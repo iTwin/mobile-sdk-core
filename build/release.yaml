@@ -60,6 +60,8 @@ stages:
             scriptSource: filePath
             scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
             arguments: stage1
+          env:
+            GH_TOKEN: $(GH_TOKEN)
 
 - template: cd-stages.yaml
 
@@ -96,6 +98,8 @@ stages:
             scriptSource: filePath
             scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
             arguments: stage2
+          env:
+            GH_TOKEN: $(GH_TOKEN)
 
 - template: build/cd-stages.yaml@mobile-ui-react
 
@@ -132,3 +136,5 @@ stages:
             scriptSource: filePath
             scriptPath: $(Build.SourcesDirectory)/mobile-sdk-ios/newVersion.py
             arguments: stage3
+          env:
+            GH_TOKEN: $(GH_TOKEN)
