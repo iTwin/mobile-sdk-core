@@ -1,12 +1,11 @@
 stages:
-- stage: Build
-  displayName: Build
+- stage: BuildCore
+  displayName: Build mobile-sdk-core
   jobs:
     - template: ci.yaml
 
 - stage: PublishCoreNpmjs
-  displayName: Publish to Npmjs
-  dependsOn: Build
+  displayName: Publish mobile-sdk-core to Npmjs
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.Build.outputs['Build.checkPublish.canPublish'], 'true'), eq(variables['shouldPublish'], 'true'))
   variables:
     version: $[ stageDependencies.Build.Build.outputs['checkPublish.version'] ]
