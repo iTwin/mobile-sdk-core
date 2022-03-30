@@ -50,8 +50,8 @@ stages:
             versionSpec: 3.x
 
         - bash: |
-            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
-            git config --local user.name "Travis Cobbs"
+            git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --global user.name "Travis Cobbs"
           displayName: Setup Git
 
         - task: PythonScript@0
@@ -86,8 +86,8 @@ stages:
             versionSpec: 3.x
 
         - bash: |
-            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
-            git config --local user.name "Travis Cobbs"
+            git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --global user.name "Travis Cobbs"
           displayName: Setup Git
 
         - task: PythonScript@0
@@ -122,8 +122,8 @@ stages:
             versionSpec: 3.x
 
         - bash: |
-            git config --local user.email 77415528+tcobbs-bentley@users.noreply.github.com
-            git config --local user.name "Travis Cobbs"
+            git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --global user.name "Travis Cobbs"
           displayName: Setup Git
 
         - task: PythonScript@0
