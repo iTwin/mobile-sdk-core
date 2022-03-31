@@ -9,7 +9,7 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.BuildCore.outputs['Build.checkPublish.shouldPublish'], 'true'))
 #  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.BuildCore.outputs['Build.checkPublish.shouldPublish'], 'true'), eq(variables['performingRelease'], 'true'))
   variables:
-    version: $[ stageDependencies.Build.Build.outputs['checkPublish.version'] ]
+    version: $[ stageDependencies.BuildCore.Build.outputs['checkPublish.version'] ]
 
   jobs:
     - template: templates/npmjs-publish-deployment.yaml@build-pipeline-scripts
