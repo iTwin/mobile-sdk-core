@@ -76,6 +76,9 @@ export class MessengerImpl {
       } catch (ex) {
         // ignore
       }
+      if (!parsedMessage) {
+        return undefined;
+      }
       if (parsedMessage.unhandled) {
         throw new MessageNotImplementedError(name);
       } else if (parsedMessage.error !== undefined) {
