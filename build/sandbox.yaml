@@ -1,0 +1,28 @@
+trigger: none
+pr: none
+
+variables:
+  - name: performingRelease
+    value: true
+
+stages:
+- stage: Stage1
+  displayName: Sandbox stage1
+  jobs:
+    - job: Stage1Job
+      displayName: Sandbox stage1 job
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - checkout: self
+
+        - task: NodeTool@0
+          displayName: Use Node 16.x
+          inputs:
+            versionSpec: 16.x
+
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.x
+
+        - script: env
