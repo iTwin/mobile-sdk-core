@@ -34,10 +34,10 @@ stages:
           inputs:
             versionSpec: 3.x
 
-        - bash: |
-            git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
-            git config --global user.name tcobbs-bentley
-          displayName: Setup Git
+        # - bash: |
+        #     git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
+        #     git config --global user.name tcobbs-bentley
+        #   displayName: Setup Git
 
         - task: PythonScript@0
           displayName: Stage1
