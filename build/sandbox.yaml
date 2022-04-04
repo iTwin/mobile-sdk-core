@@ -35,4 +35,4 @@ stages:
           displayName: Stage1
           inputs:
             scriptSource: filePath
-            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-core/build/sandbox.py
+            scriptPath: build/sandbox.py
