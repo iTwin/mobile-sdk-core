@@ -25,9 +25,11 @@ stages:
           inputs:
             versionSpec: 3.x
 
-        - script: env
+        - script: ls
+          displayName: ls
 
         - script: pwd
+          displayName: pwd
 
         - task: PythonScript@0
           displayName: Stage1
