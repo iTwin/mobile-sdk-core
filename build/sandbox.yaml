@@ -5,6 +5,14 @@ variables:
   - name: performingRelease
     value: true
 
+resources:
+  repositories:
+    - repository: mobile-sdk-ios
+      type: github
+      name: iTwin/mobile-sdk-ios
+      ref: main
+      endpoint: iModelJs
+
 stages:
 - stage: Stage1
   displayName: Sandbox stage1
@@ -15,6 +23,7 @@ stages:
         vmImage: ubuntu-latest
       steps:
         - checkout: self
+        - checkout: mobile-sdk-ios
 
         - task: NodeTool@0
           displayName: Use Node 16.x
@@ -25,14 +34,13 @@ stages:
           inputs:
             versionSpec: 3.x
 
-        - script: ls
-          displayName: ls
-
-        - script: pwd
-          displayName: pwd
+        - bash: |
+            git config --global user.email 77415528+tcobbs-bentley@users.noreply.github.com
+            git config --global user.name tcobbs-bentley
+          displayName: Setup Git
 
         - task: PythonScript@0
           displayName: Stage1
           inputs:
             scriptSource: filePath
-            scriptPath: build/sandbox.py
+            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-core/build/sandbox.py
