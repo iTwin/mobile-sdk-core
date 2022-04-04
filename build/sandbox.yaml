@@ -26,3 +26,9 @@ stages:
             versionSpec: 3.x
 
         - script: env
+
+        - task: PythonScript@0
+          displayName: Stage1
+          inputs:
+            scriptSource: filePath
+            scriptPath: $(Build.SourcesDirectory)/mobile-sdk-core/build/sandbox.py
