@@ -27,6 +27,8 @@ stages:
 
         - script: env
 
+        - script: pwd
+
         - task: PythonScript@0
           displayName: Stage1
           inputs:
