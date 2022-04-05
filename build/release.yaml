@@ -63,7 +63,7 @@ stages:
           env:
             GH_TOKEN: $(GH_TOKEN)
 
-- template: cd-stages.yaml
+- template: cd-stages-core.yaml
 
 - stage: Stage2
   displayName: Run newVersion.py stage2
@@ -101,7 +101,7 @@ stages:
           env:
             GH_TOKEN: $(GH_TOKEN)
 
-- template: build/cd-stages.yaml@mobile-ui-react
+- template: build/cd-stages-ui-react.yaml@mobile-ui-react
 
 - stage: Stage3
   displayName: Run newVersion.py stage3

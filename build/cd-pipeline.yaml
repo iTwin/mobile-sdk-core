@@ -16,4 +16,4 @@ resources:
       name: iModelTechnologies/imodeljs-build-pipeline-scripts
 
 stages:
-- template: cd-stages.yaml
+- template: cd-stages-core.yaml
