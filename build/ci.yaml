@@ -3,7 +3,9 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-    - checkout: self
+    - checkout: mobile-sdk-core
+      clean: all
+    - checkout: mobile-ui-react
       clean: all
 
     - task: NodeTool@0
@@ -15,13 +17,17 @@ jobs:
     - bash: |
         git checkout main
       displayName: Switch back to main branch
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
       name: checkoutMain
     - script: npm ci
       displayName: npm install
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
     - script: npm run lint
       displayName: npm run lint
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
     - script: npm run build
       displayName: npm run build
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
     - bash: |
         pkgName=$(node -p "require('./package.json').name")
         pkgVer=$(node -p "require('./package.json').version")
@@ -46,11 +52,14 @@ jobs:
         echo "##vso[task.setvariable variable=version;isOutput=true]$pkgVer"
         echo "Should publish: $newer"
       displayName: Check if should publish
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
       name: checkPublish
     - bash: npm pack
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
       displayName: npm pack
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
     - publish: itwin-mobile-sdk-core-$(checkPublish.version).tgz
       artifact: tarball
       displayName: Publish packed file
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
+      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core

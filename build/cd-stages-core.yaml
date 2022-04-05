@@ -13,6 +13,6 @@ stages:
   jobs:
     - template: templates/npmjs-publish-deployment.yaml@build-pipeline-scripts
       parameters:
-        path: itwin-mobile-sdk-core-$(version).tgz
+        path: $(Build.SourcesDirectory)/mobile-sdk-core/itwin-mobile-sdk-core-$(version).tgz
         artifactName: tarball
         releaseTag: latest

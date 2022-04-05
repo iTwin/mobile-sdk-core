@@ -11,6 +11,16 @@ name: $(date:yyyy.MM.dd)$(Rev:.r)
 
 resources:
   repositories:
+    - repository: mobile-sdk-core
+      type: github
+      name: iTwin/mobile-sdk-core
+      ref: main
+      endpoint: iModelJs
+    - repository: mobile-ui-react
+      type: github
+      name: iTwin/mobile-ui-react
+      ref: main
+      endpoint: iModelJs
     - repository: build-pipeline-scripts
       type: git
       name: iModelTechnologies/imodeljs-build-pipeline-scripts
