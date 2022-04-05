@@ -58,8 +58,7 @@ jobs:
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
       displayName: npm pack
       workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
-    - publish: itwin-mobile-sdk-core-$(checkPublish.version).tgz
+    - publish: $(Build.SourcesDirectory)/mobile-sdk-core/itwin-mobile-sdk-core-$(checkPublish.version).tgz
       artifact: tarball
       displayName: Publish packed file
       condition: and(succeeded(), eq(variables['checkPublish.shouldPublish'], 'true'))
-      workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
