@@ -117,13 +117,9 @@ stages:
         vmImage: ubuntu-latest
       steps:
         - checkout: self
-          persistCredentials: true
         - checkout: mobile-sdk-ios
-          persistCredentials: true
         - checkout: mobile-ui-react
-          persistCredentials: true
         - checkout: mobile-samples
-          persistCredentials: true
 
         - task: NodeTool@0
           displayName: Use Node 16.x
