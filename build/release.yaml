@@ -12,6 +12,11 @@ resources:
       name: iTwin/mobile-sdk-ios
       ref: main
       endpoint: iModelJs
+    - repository: mobile-sdk-android
+      type: github
+      name: iTwin/mobile-sdk-android
+      ref: main
+      endpoint: iModelJs
     - repository: mobile-sdk-core
       type: github
       name: iTwin/mobile-sdk-core
@@ -41,6 +46,7 @@ stages:
         vmImage: ubuntu-latest
       steps:
         - checkout: mobile-sdk-ios
+        - checkout: mobile-sdk-android
         - checkout: mobile-sdk-core
         - checkout: mobile-ui-react
         - checkout: mobile-samples
@@ -80,6 +86,7 @@ stages:
       steps:
         - checkout: self
         - checkout: mobile-sdk-ios
+        - checkout: mobile-sdk-android
         - checkout: mobile-ui-react
         - checkout: mobile-samples
 
@@ -118,6 +125,7 @@ stages:
       steps:
         - checkout: self
         - checkout: mobile-sdk-ios
+        - checkout: mobile-sdk-android
         - checkout: mobile-ui-react
         - checkout: mobile-samples
 
