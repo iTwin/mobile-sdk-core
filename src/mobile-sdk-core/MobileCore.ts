@@ -56,6 +56,8 @@ interface UpdateSafeAreaArgs {
   top: number;
   right: number;
   bottom: number;
+  minLeft?: number;
+  minRight?: number;
 }
 
 /** Class for top-level MobileCore functionality. */
@@ -360,12 +362,14 @@ export class MobileCore {
   private static _muiUpdateSafeAreas = async (args: UpdateSafeAreaArgs) => {
     const root = document.documentElement;
     for (const sideName in args) {
-      if (args.hasOwnProperty(sideName)) {
+      if (args.hasOwnProperty(sideName) && sideName !== "minLeft" && sideName !== "minRight") {
         const key = `--itm-safe-area-${sideName}`;
         const value = `${((args as any)[sideName]).toString()}px`;
         root.style.setProperty(key, value);
       }
     }
+    root.style.setProperty("--itm-safe-area-min-left", `${args.minLeft ?? args.left}px`);
+    root.style.setProperty("--itm-safe-area-min-right", `${args.minRight ?? args.right}px`);
   };
 }
 

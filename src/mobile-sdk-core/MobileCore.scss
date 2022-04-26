@@ -16,4 +16,6 @@
   --itm-safe-area-right: constant(safe-area-inset-right);
   --itm-safe-area-right: env(safe-area-inset-right);
   --itm-safe-area-bottom-over-keyboard: var(--itm-safe-area-bottom);
+  --itm-safe-area-min-left: var(--itm-safe-area-left);
+  --itm-safe-area-min-right: var(--itm-safe-area-right);
 }
