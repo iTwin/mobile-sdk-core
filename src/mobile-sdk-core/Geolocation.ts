@@ -37,7 +37,7 @@ function watchPosition(successCallback: PositionCallback, errorCallback?: Positi
   geolocationData.watch.positionHandlers[positionId] = { successCallback, errorCallback };
 
   // Try using Android interface
-  anyWindow.androidAppGeolocationInterface?.watchPosition(positionId);
+  anyWindow.Bentley_ITMGeolocationInterface?.watchPosition(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -52,7 +52,7 @@ function clearWatch(positionId: number) {
   if (!geolocationData.watch.positionHandlers[positionId]) return;
 
   // Try using Android interface
-  anyWindow.androidAppGeolocationInterface?.clearWatch(positionId);
+  anyWindow.Bentley_ITMGeolocationInterface?.clearWatch(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -67,7 +67,7 @@ function getCurrentPosition(successCallback: PositionCallback, errorCallback?: P
   geolocationData.position.positionHandlers[positionId] = { successCallback, errorCallback };
 
   // Try using Android interface
-  anyWindow.androidAppGeolocationInterface?.getCurrentPosition(positionId);
+  anyWindow.Bentley_ITMGeolocationInterface?.getCurrentPosition(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -109,7 +109,7 @@ function Bentley_ITMGeolocation(messageName: string, messageData: string) {
   }
 }
 
-if (anyWindow.androidAppGeolocationInterface !== undefined || anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation !== undefined) {
+if (anyWindow.Bentley_ITMGeolocationInterface !== undefined || anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation !== undefined) {
   anyGeolocation.watchPosition = watchPosition;
   anyGeolocation.clearWatch = clearWatch;
   anyGeolocation.getCurrentPosition = getCurrentPosition;
