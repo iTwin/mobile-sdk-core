@@ -37,7 +37,7 @@ function watchPosition(successCallback: PositionCallback, errorCallback?: Positi
   geolocationData.watch.positionHandlers[positionId] = { successCallback, errorCallback };
 
   // Try using Android interface
-  anyWindow.Bentley_ITMGeolocationInterface?.watchPosition(positionId);
+  anyWindow.Bentley_ITMGeolocation?.watchPosition(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -52,7 +52,7 @@ function clearWatch(positionId: number) {
   if (!geolocationData.watch.positionHandlers[positionId]) return;
 
   // Try using Android interface
-  anyWindow.Bentley_ITMGeolocationInterface?.clearWatch(positionId);
+  anyWindow.Bentley_ITMGeolocation?.clearWatch(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -67,7 +67,7 @@ function getCurrentPosition(successCallback: PositionCallback, errorCallback?: P
   geolocationData.position.positionHandlers[positionId] = { successCallback, errorCallback };
 
   // Try using Android interface
-  anyWindow.Bentley_ITMGeolocationInterface?.getCurrentPosition(positionId);
+  anyWindow.Bentley_ITMGeolocation?.getCurrentPosition(positionId);
 
   // Try using iOS interface
   anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation.postMessage(JSON.stringify({
@@ -92,7 +92,7 @@ function positionUpdate(messageData: string, geolocation: BentleyGeolocation) {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function Bentley_ITMGeolocation(messageName: string, messageData: string) {
+function Bentley_ITMGeolocationResponse(messageName: string, messageData: string) {
   switch (messageName) {
     case "watchPosition":
       positionUpdate(messageData, geolocationData.watch);
@@ -109,9 +109,9 @@ function Bentley_ITMGeolocation(messageName: string, messageData: string) {
   }
 }
 
-if (anyWindow.Bentley_ITMGeolocationInterface !== undefined || anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation !== undefined) {
+if (anyWindow.Bentley_ITMGeolocation !== undefined || anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation !== undefined) {
   anyGeolocation.watchPosition = watchPosition;
   anyGeolocation.clearWatch = clearWatch;
   anyGeolocation.getCurrentPosition = getCurrentPosition;
-  anyWindow.Bentley_ITMGeolocation = Bentley_ITMGeolocation;
+  anyWindow.Bentley_ITMGeolocationResponse = Bentley_ITMGeolocationResponse;
 }
