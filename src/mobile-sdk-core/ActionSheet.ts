@@ -6,6 +6,21 @@ import { ActionStyle, AlertActions, callOnSelected, extractAlertActions } from "
 import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
+/**
+ * Gravity used by [[ActionSheetProps]] on Android.
+ * @public
+ */
+export enum ActionSheetGravity {
+  Top = "top",
+  Bottom = "bottom",
+  Left = "left",
+  Right = "right",
+  TopLeft = "topLeft",
+  TopRight = "topRight",
+  BottomLeft = "bottomLeft",
+  BottomRight = "bottomRight",
+}
+
 /** Properties for [[ActionSheet.show]]
  * @public
  */
@@ -25,6 +40,8 @@ export interface ActionSheetProps {
   skipCancel?: boolean;
   /** Whether or not to show the status bar during the alert, default is false. */
   showStatusBar?: boolean;
+  /** _Android only:_ The gravity to use when displaying the PopupMenu. */
+  gravity?: ActionSheetGravity;
 }
 
 /**
@@ -37,7 +54,7 @@ export interface ActionSheetProps {
  * @public
  */
 export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect) {
-  const { message, title, showStatusBar, actions: propsActions, skipCancel = false } = props;
+  const { message, title, showStatusBar, actions: propsActions, skipCancel = false, gravity } = props;
   const actions = await extractAlertActions(propsActions);
   const messageData = {
     title,
@@ -45,6 +62,7 @@ export async function presentActionSheet(props: ActionSheetProps, sourceRect: DO
     showStatusBar,
     style: "actionSheet",
     sourceRect,
+    gravity,
     actions: [...actions],
   };
   let needCancel = !skipCancel;
