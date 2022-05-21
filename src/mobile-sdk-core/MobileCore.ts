@@ -255,15 +255,19 @@ export class MobileCore {
    * if a project is not specified.
    * @param projectId If set, the projectId of the project from which to delete all cached briefcases.
    *                  If unset, cached briefcases from all projects will be deleted.
+   * @returns The deleted briefcases as an array of [[LocalBriefcaseProps]].
    * @public
    */
   public static async deleteCachedBriefcases(projectId?: string) {
     const briefcases = await NativeApp.getCachedBriefcases();
+    const deletedBriefcases: LocalBriefcaseProps[] = [];
     for (const briefcase of briefcases) {
       if (!projectId || projectId === briefcase.iTwinId) {
         await NativeApp.deleteBriefcase(briefcase.fileName);
+        deletedBriefcases.push(briefcase);
       }
     }
+    return deletedBriefcases;
   }
 
   /** Utility function to sleep for the specified number of milliseconds.
