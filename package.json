@@ -19,9 +19,9 @@
   ],
   "scripts": {
     "build": "npm run copy:assets && tsc 1>&2",
-	"build:debug": "npm run build && run-script-os",
+    "build:debug": "npm run build && run-script-os",
     "build:debug:nix": "./syncToTestApp.sh",
-	"build:debug:windows": "powershell ./syncToTestApp.ps1",
+    "build:debug:windows": "powershell ./syncToTestApp.ps1",
     "clean": "rimraf lib",
     "copy:assets": "cpx \"./src/**/*.{*css,svg}\" ./lib && cpx \"./public/**/*\" ./lib/public",
     "lint": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
