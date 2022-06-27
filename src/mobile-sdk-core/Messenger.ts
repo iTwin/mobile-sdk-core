@@ -128,7 +128,7 @@ export class Messenger {
     }
   }
 
-  /** Send a query to native code an return its response.
+  /** Send a query to native code and return its response.
    * @param name: The name of the query.
    * @param message: Optional message data to send in the query. This cannot use types that are not supported by
    *                 the current platform's JavaScript<->Native communications mechanism. (For example, Date objects
