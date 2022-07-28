@@ -51,9 +51,21 @@ export type AlertActions = AlertAction[] | (() => AlertAction[]) | (() => Promis
 export interface AlertProps {
   /** Optional title of the presented alert box. */
   title?: string;
-  /** Optional message in the presented alert box. */
+  /**
+   * Optional message in the presented alert box.
+   *
+   * __Note__: On Android, if more than three actions are provided, this is ignored.
+   */
   message?: string;
-  /** List of actions in the presented alert box. Must contain at least one item. */
+  /**
+   * List of actions in the presented alert box. Must contain at least one item.
+   *
+   * __Note__: On Android, if three or less actions are supplied, they are mapped to the `AlertDialog`
+   * buttons as follows:
+   * * The last action goes into the positive button of the `AlertDialog`.
+   * * The first to last action (if present) goes into the negative button of the `AlertDialog`.
+   * * The second to last action (if present) goes into the neutral button of the `AlertDialog`.
+   */
   actions: AlertActions;
   /** Whether or not to show the status bar during the alert, default is false. */
   showStatusBar?: boolean;
