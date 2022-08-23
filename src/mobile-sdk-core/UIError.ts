@@ -19,7 +19,7 @@ export class UserFriendlyError extends Error {
 export class UIError {
   [key: string]: any;
   public constructor() { }
-  public static create: (error: any) => UIError = (error) => UIError.create(error);
+  public static create = (error: any) => UIError.defaultCreate(error);
 
   public static i18n(key: string): string {
     return MobileCore.translate(`ui-error.${key}`);
