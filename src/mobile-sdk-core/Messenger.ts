@@ -65,7 +65,7 @@ export class QueryHandler {
   public setHandler(handler: QueryListener, scope?: any): () => void {
     this._handler = new QueryContext(handler, scope, false);
     const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
-    return () => { event.unsetHandler(handler, scope); };
+    return () => event.unsetHandler(handler, scope);
   }
 
   /** Call to set the handler function for this query. It will be automatically unset after the first call.
@@ -77,7 +77,7 @@ export class QueryHandler {
   public setOnce(handler: QueryListener, scope?: any): () => void {
     this._handler = new QueryContext(handler, scope, true);
     const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
-    return () => { event.unsetHandler(handler, scope); };
+    return () => event.unsetHandler(handler, scope);
   }
 
   /** Unset the handler function for this query.
