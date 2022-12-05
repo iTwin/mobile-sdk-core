@@ -101,8 +101,7 @@ export class MobileCore {
     if (this._localization === undefined) {
       return `Attempt to translate ${key} before localization init.`;
     }
-    const result = this._localization.getLocalizedStringWithNamespace("iTwinMobileCore", key, options);
-    return result;
+    return this._localization.getLocalizedString(`iTwinMobileCore:${key}`, options);
   }
 
   /** Property indicating if the software keyboard is currently visible. */
