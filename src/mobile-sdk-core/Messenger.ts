@@ -152,8 +152,7 @@ export class Messenger {
    * @public
    */
   public static sendMessage(name: string, message?: any) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Messenger.query(name, message);
+    void Messenger.query(name, message);
   }
 
   /** Get the QueryHandler for the given query.
