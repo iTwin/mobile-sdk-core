@@ -49,11 +49,11 @@ export interface ActionSheetProps {
  * @param props The properties of the action sheet.
  * @param sourceRect The bounding rectangle of the control that is showing the action sheet.
  * @param senderId The optional sender ID to use for messaging. If undefined, this will be auto-generated.
- * @returns The name of the action the user selected, or nil if the user cancels. If you set the onSelected
+ * @returns The name of the action the user selected, or undefined if the user cancels. If you set the onSelected
  *          callback for each [[AlertAction]], you can ignore the return value.
  * @public
  */
-export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect) {
+export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect): Promise<string | undefined> {
   const { message, title, showStatusBar, actions: propsActions, skipCancel = false, gravity } = props;
   const actions = await extractAlertActions(propsActions);
   const messageData = {
@@ -85,12 +85,12 @@ export async function presentActionSheet(props: ActionSheetProps, sourceRect: DO
   // event (typically selection) in the viewport.
   const disabledDivs = MobileCore.disableAllViewportPointerEvents();
   // Send the query so the native code will display the action sheet, and wait for the result.
-  const result: string | undefined = await Messenger.query("Bentley_ITM_presentActionSheet", messageData);
+  const result: string | undefined = (await Messenger.query("Bentley_ITM_presentActionSheet", messageData)) ?? undefined;
   // Reenabled pointer events in all viewports where we disabled them above.
   MobileCore.reenableViewportPointerEvents(disabledDivs);
   callOnSelected(result, actions);
   if (result === "itm_cancel") {
-    return null;
+    return undefined;
   }
-  return result;
+  return result ?? undefined;
 }

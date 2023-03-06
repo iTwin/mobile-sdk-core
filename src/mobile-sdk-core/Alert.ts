@@ -113,7 +113,7 @@ export async function presentAlert(props: AlertProps): Promise<string | undefine
       action.style = ActionStyle.Default;
     }
   }
-  const result: string | undefined = await Messenger.query("Bentley_ITM_presentAlert", messageData);
+  const result: string | undefined = (await Messenger.query("Bentley_ITM_presentAlert", messageData)) ?? undefined;
   callOnSelected(result, actions);
   return result;
 }
