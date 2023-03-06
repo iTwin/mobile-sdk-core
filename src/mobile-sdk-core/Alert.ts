@@ -95,10 +95,11 @@ export async function extractAlertActions(alertActions: AlertActions) {
  * Note: While this does use a native alert box like window.alert() and window.confirm(), it does not pause JavaScript
  * execution in the web view. It does, however, prevent all user interaction outside the alert box.
  * @returns The name of the action selected by the user. If you set the onSelected callback for
- *          each [[AlertAction]], you can ignore the return value.
+ *          each [[AlertAction]], you can ignore the return value. If a presentAlert() is called when a previous
+ *          alert is still waiting for a response, this returns undefined.
  * @public
  */
-export async function presentAlert(props: AlertProps): Promise<string> {
+export async function presentAlert(props: AlertProps): Promise<string | undefined> {
   const { title, message, showStatusBar, actions: propsActions } = props;
   const actions = await extractAlertActions(propsActions);
   const messageData = {
@@ -112,7 +113,7 @@ export async function presentAlert(props: AlertProps): Promise<string> {
       action.style = ActionStyle.Default;
     }
   }
-  const result: string = await Messenger.query("Bentley_ITM_presentAlert", messageData);
+  const result: string | undefined = (await Messenger.query("Bentley_ITM_presentAlert", messageData)) ?? undefined;
   callOnSelected(result, actions);
   return result;
 }
