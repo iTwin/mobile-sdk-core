@@ -34,7 +34,6 @@
     }
   },
   "dependencies": {
-    "@itwin/appui-abstract": "3.6.1",
     "@itwin/core-bentley": "3.6.1",
     "@itwin/core-common": "3.6.1",
     "@itwin/core-frontend": "3.6.1",
