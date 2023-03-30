@@ -9,16 +9,16 @@ jobs:
       clean: all
 
     - task: NodeTool@0
-      displayName: Use Node 16.x
+      displayName: Use Node 18.x
       inputs:
-        versionSpec: 16.x
+        versionSpec: 18.x
         latest: true
 
     - bash: |
-        git checkout main
-      displayName: Switch back to main branch
+        git checkout itwin-4
+      displayName: Switch back to itwin-4 branch
       workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
-      name: checkoutMain
+      name: checkoutITwin4
     - script: npm ci
       displayName: npm install
       workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
@@ -32,10 +32,10 @@ jobs:
         pkgName=$(node -p "require('./package.json').name")
         pkgVer=$(node -p "require('./package.json').version")
 
-        ver=$(npm view $pkgName versions --json | grep '"0\.10\.' | cut -d\" -f2 | sort -V | tail -1)
+        ver=$(npm view $pkgName versions --json | grep '"0\.20\.' | cut -d\" -f2 | sort -V | tail -1)
 
         if [ -z "$ver" ]; then
-          ver=0.0.0
+          ver=0.11.0
           echo "\$ver is empty"
         fi
 

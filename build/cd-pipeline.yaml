@@ -1,11 +1,11 @@
 trigger:
-  - main
+  - itwin-4
 
 pr:
   drafts: false
   branches:
     include:
-      - main
+      - itwin-4
 
 name: $(date:yyyy.MM.dd)$(Rev:.r)
 
@@ -14,12 +14,12 @@ resources:
     - repository: mobile-sdk-core
       type: github
       name: iTwin/mobile-sdk-core
-      ref: main
+      ref: itwin-4
       endpoint: iModelJs
     - repository: mobile-ui-react
       type: github
       name: iTwin/mobile-ui-react
-      ref: main
+      ref: itwin-4
       endpoint: iModelJs
     - repository: build-pipeline-scripts
       type: git
