@@ -2,12 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ActionStyle, AlertActions, callOnSelected, extractAlertActions } from "./Alert";
+import { AlertAction as _TSDoc_AlertAction, ActionStyle, AlertActions, callOnSelected, extractAlertActions } from "./Alert";
 import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
 /**
- * Gravity used by [[ActionSheetProps]] on Android.
+ * Gravity used by {@link ActionSheetProps} on Android.
  * @public
  */
 export enum ActionSheetGravity {
@@ -21,7 +21,7 @@ export enum ActionSheetGravity {
   BottomRight = "bottomRight",
 }
 
-/** Properties for [[ActionSheet.show]]
+/** Properties for {@link presentActionSheet} function.
  * @public
  */
 export interface ActionSheetProps {
@@ -50,7 +50,7 @@ export interface ActionSheetProps {
  * @param sourceRect The bounding rectangle of the control that is showing the action sheet.
  * @param senderId The optional sender ID to use for messaging. If undefined, this will be auto-generated.
  * @returns The name of the action the user selected, or undefined if the user cancels. If you set the onSelected
- *          callback for each [[AlertAction]], you can ignore the return value.
+ *          callback for each {@link _TSDoc_AlertAction | AlertAction}, you can ignore the return value.
  * @public
  */
 export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect): Promise<string | undefined> {

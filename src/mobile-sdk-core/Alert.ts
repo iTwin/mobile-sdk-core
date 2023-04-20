@@ -4,9 +4,10 @@
 *--------------------------------------------------------------------------------------------*/
 import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
+import { presentActionSheet as _TSDoc_presentActionSheet } from "./ActionSheet";
 
 /**
- * Style used by [[ActionSheetAction]] and [[AlertAction]].
+ * Style used by {@link AlertAction}.
  * @public
  */
 export enum ActionStyle {
@@ -16,7 +17,7 @@ export enum ActionStyle {
 }
 
 /**
- * Action to take in the [[presentAlert]] function or [[ActionSheetButton]] component.
+ * Action to take in the {@link presentAlert} function or `ActionSheetButton` component.
  * @public
  */
 export interface AlertAction {
@@ -24,18 +25,18 @@ export interface AlertAction {
   name: string;
   /** The text to present to the user for this action. */
   title: string;
-  /** The style for this action. Default is [[ActionStyle.Default]]. */
+  /** The style for this action. Default is {@link ActionStyle.Default}. */
   style?: ActionStyle;
   /** The callback called when this action is selected by the user.
    *
-   * It is your choice whether to use this or process the return value from [[processAlert]] or
-   * [[ActionSheet.show]]
+   * It is your choice whether to use this or process the return value from {@link presentAlert} or
+   * {@link _TSDoc_presentActionSheet | presentActionSheet}.
    */
   onSelected?: (action: AlertAction) => void;
 }
 
 /**
- * Actions to take in [[presentAlert]] and [[presentActionSheet]].
+ * Actions to take in {@link presentAlert} and {@link _TSDoc_presentActionSheet | presentActionSheet}.
  *
  * Note: If you use a function that returns a Promise, it needs to resolve the Promise quickly,
  * since the function does not get called until the user triggers it. Consequently, the user is
@@ -45,7 +46,7 @@ export interface AlertAction {
 export type AlertActions = AlertAction[] | (() => AlertAction[]) | (() => Promise<AlertAction[]>);
 
 /**
- * Props for the [[presentAlert]] function.
+ * Props for the {@link presentAlert} function.
  * @public
  */
 export interface AlertProps {
@@ -95,7 +96,7 @@ export async function extractAlertActions(alertActions: AlertActions) {
  * Note: While this does use a native alert box like window.alert() and window.confirm(), it does not pause JavaScript
  * execution in the web view. It does, however, prevent all user interaction outside the alert box.
  * @returns The name of the action selected by the user. If you set the onSelected callback for
- *          each [[AlertAction]], you can ignore the return value. If a presentAlert() is called when a previous
+ *          each {@link AlertAction}, you can ignore the return value. If `presentAlert()` is called when a previous
  *          alert is still waiting for a response, this returns undefined.
  * @public
  */
@@ -119,11 +120,11 @@ export async function presentAlert(props: AlertProps): Promise<string | undefine
 }
 
 /**
- * Call the onSelected callback on the action whose name matches [[selectedActionName]].
+ * Call the `onSelected` callback on the action whose name matches {@link selectedActionName}.
  *
- * If onSelected is undefined for the action with the matching name, this function does nothing.
+ * If `onSelected` is undefined for the action with the matching name, this function does nothing.
  *
- * Note: this is used internally by [[presentActionSheet]] and [[presentAlert]].
+ * Note: this is used internally by {@link _TSDoc_presentActionSheet | presentActionSheet} and {@link presentAlert}.
  * @param selectedActionName The name of the action selected by the user.
  * @param actions The list of actions presented to the user.
  */

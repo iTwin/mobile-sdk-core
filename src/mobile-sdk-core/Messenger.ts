@@ -47,7 +47,7 @@ export class MessageJsonError extends Error {
   }
 }
 
-/** Object returned by [[Messenger.onQuery]] to handle a query.
+/** Object returned by {@link Messenger.onQuery} to handle a query.
  * @public
  */
 export class QueryHandler {
@@ -94,7 +94,7 @@ export class QueryHandler {
     return false;
   }
 
-  /** Called by [[Messenger]] when a query arrives. Do not call.
+  /** Called by {@link Messenger} when a query arrives. Do not call.
    * @internal
    */
   public async performQuery(message: any) {
@@ -143,7 +143,7 @@ export class Messenger {
     return undefined;
   }
 
-  /** Wrapper around [[query]] that is not async and does not return a result. Use when a query does not have
+  /** Wrapper around {@link query} that is not async and does not return a result. Use when a query does not have
    * a meaningful result and you don't want to wait for it to complete.
    * @param name: The name of the message to send.
    * @param message: Optional data to send with the message. This data must be made up of types that can be communicated
