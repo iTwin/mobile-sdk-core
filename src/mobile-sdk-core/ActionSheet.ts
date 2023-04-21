@@ -21,7 +21,8 @@ export enum ActionSheetGravity {
   BottomRight = "bottomRight",
 }
 
-/** Properties for {@link presentActionSheet} function.
+/**
+ * Properties for {@link presentActionSheet} function.
  * @public
  */
 export interface ActionSheetProps {
@@ -29,7 +30,8 @@ export interface ActionSheetProps {
   title?: string;
   /** Optional message to show on the action sheet. */
   message?: string;
-  /** Actions to perform by the action sheet.
+  /**
+   * Actions to perform by the action sheet.
    *
    * Note: If no action with an ActionStyle of Cancel is present, a default cancel action will be automatically
    * provided unless skipCancel is set to true. Note that iPads allow cancelation even if there is no cancel action,

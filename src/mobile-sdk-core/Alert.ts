@@ -26,7 +26,8 @@ export interface AlertAction {
   title: string;
   /** The style for this action. Default is {@link ActionStyle.Default}. */
   style?: ActionStyle;
-  /** The callback called when this action is selected by the user.
+  /**
+   * The callback called when this action is selected by the user.
    *
    * It is your choice whether to use this or process the return value from {@link presentAlert} or
    * `presentActionSheet`.
