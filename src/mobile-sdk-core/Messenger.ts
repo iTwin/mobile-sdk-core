@@ -4,7 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { MobileCore } from "./MobileCore";
 
-/** Type used to listen for queries from native code.
+/**
+ * Type used to listen for queries from native code.
  * @param message: The optional message data received from the native code.
  * @returns A promise containing the optional response to be sent back to the native code.
  */
@@ -17,7 +18,8 @@ class QueryContext {
   constructor(public handler: QueryListener | undefined, public scope: any, public once: boolean) { }
 }
 
-/** Error subclass that is used when native code sends a query that does not have a handler.
+/**
+ * Error subclass that is used when native code sends a query that does not have a handler.
  * @public
  */
 export class MessageNotImplementedError extends Error {
@@ -47,7 +49,8 @@ export class MessageJsonError extends Error {
   }
 }
 
-/** Object returned by {@link Messenger.onQuery} to handle a query.
+/**
+ * Object returned by {@link Messenger.onQuery} to handle a query.
  * @public
  */
 export class QueryHandler {
@@ -56,7 +59,8 @@ export class QueryHandler {
    */
   private _handler?: QueryContext;
 
-  /** Call to set the handler function for this query.
+  /**
+   * Call to set the handler function for this query.
    * @param handler: The handler function for this query.
    * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
    * @returns: An arrow function that when called, unsets the handler.
@@ -68,7 +72,8 @@ export class QueryHandler {
     return () => event.unsetHandler(handler, scope);
   }
 
-  /** Call to set the handler function for this query. It will be automatically unset after the first call.
+  /**
+   * Call to set the handler function for this query. It will be automatically unset after the first call.
    * @param handler: The handler function for this query.
    * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
    * @returns: An arrow function that when called, unsets the handler.
@@ -80,7 +85,8 @@ export class QueryHandler {
     return () => event.unsetHandler(handler, scope);
   }
 
-  /** Unset the handler function for this query.
+  /**
+   * Unset the handler function for this query.
    * @param handler: The handler function to unset.
    * @param scope: The optional scope associated with the handler.
    * @public
@@ -94,7 +100,8 @@ export class QueryHandler {
     return false;
   }
 
-  /** Called by {@link Messenger} when a query arrives. Do not call.
+  /**
+   * Called by {@link Messenger} when a query arrives. Do not call.
    * @internal
    */
   public async performQuery(message: any) {
@@ -111,7 +118,8 @@ export class QueryHandler {
   }
 }
 
-/** Class for handling communication to and from native code.
+/**
+ * Class for handling communication to and from native code.
  * @public
  */
 export class Messenger {
@@ -128,7 +136,8 @@ export class Messenger {
     }
   }
 
-  /** Send a query to native code and return its response.
+  /**
+   * Send a query to native code and return its response.
    * @param name: The name of the query.
    * @param message: Optional message data to send in the query. This cannot use types that are not supported by
    *                 the current platform's JavaScript<->Native communications mechanism. (For example, Date objects
@@ -143,7 +152,8 @@ export class Messenger {
     return undefined;
   }
 
-  /** Wrapper around {@link query} that is not async and does not return a result. Use when a query does not have
+  /**
+   * Wrapper around {@link query} that is not async and does not return a result. Use when a query does not have
    * a meaningful result and you don't want to wait for it to complete.
    * @param name: The name of the message to send.
    * @param message: Optional data to send with the message. This data must be made up of types that can be communicated
@@ -155,7 +165,8 @@ export class Messenger {
     void Messenger.query(name, message);
   }
 
-  /** Get the QueryHandler for the given query.
+  /**
+   * Get the QueryHandler for the given query.
    * @param messageName: The name of the query being handled.
    * @returns Unique QueryHandler object for the given query.
    */
