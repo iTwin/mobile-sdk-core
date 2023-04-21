@@ -4,7 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
-import { presentActionSheet as _TSDoc_presentActionSheet } from "./ActionSheet";
 
 /**
  * Style used by {@link AlertAction}.
@@ -30,13 +29,13 @@ export interface AlertAction {
   /** The callback called when this action is selected by the user.
    *
    * It is your choice whether to use this or process the return value from {@link presentAlert} or
-   * {@link _TSDoc_presentActionSheet | presentActionSheet}.
+   * `presentActionSheet`.
    */
   onSelected?: (action: AlertAction) => void;
 }
 
 /**
- * Actions to take in {@link presentAlert} and {@link _TSDoc_presentActionSheet | presentActionSheet}.
+ * Actions to take in {@link presentAlert} and `presentActionSheet`.
  *
  * Note: If you use a function that returns a Promise, it needs to resolve the Promise quickly,
  * since the function does not get called until the user triggers it. Consequently, the user is
@@ -124,7 +123,7 @@ export async function presentAlert(props: AlertProps): Promise<string | undefine
  *
  * If `onSelected` is undefined for the action with the matching name, this function does nothing.
  *
- * Note: this is used internally by {@link _TSDoc_presentActionSheet | presentActionSheet} and {@link presentAlert}.
+ * Note: this is used internally by `presentActionSheet` and {@link presentAlert}.
  * @param selectedActionName The name of the action selected by the user.
  * @param actions The list of actions presented to the user.
  */
