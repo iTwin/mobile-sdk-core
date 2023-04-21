@@ -9,7 +9,8 @@ import { Messenger } from "./Messenger";
 import "./Geolocation"; // Just importing this activates the Polyfill.
 import "./MobileCore.scss";
 
-/** The internet reachability status.
+/**
+ * The internet reachability status.
  * @public
  */
 export enum ReachabilityStatus {
@@ -41,8 +42,9 @@ export interface KeyboardEventArgs {
   height: number;
 }
 
-/** Interface for BeUiEvents posted about CSS variable changes made by [[MobileCore.setCssVariable]] and
- * [[MobileCore.setCssVariables]].
+/**
+ * Interface for BeUiEvents posted about CSS variable changes made by {@link MobileCore.setCssVariable} and
+ * {@link MobileCore.setCssVariables}.
  */
 export interface CssVariableEventArgs {
   /** Set containing the names of the variables whose values have changed. */
@@ -87,14 +89,16 @@ export class MobileCore {
   public static onKeyboardWillHide = new BeUiEvent<KeyboardEventArgs>();
   /** BeUiEvent emitted right after the software keyboard is hidden. */
   public static onKeyboardDidHide = new BeUiEvent<KeyboardEventArgs>();
-  /** BeUiEvent emitted when [[MobileCore.setCssVariable]] or [[MobileCore.setCssVariables]] are used to change CSS variable
+  /**
+   * BeUiEvent emitted when {@link MobileCore.setCssVariable} or {@link MobileCore.setCssVariables} are used to change CSS variable
    * values.
    */
   public static onCssVariableDidChange = new BeUiEvent<CssVariableEventArgs>();
 
-  /** Translate a string from the MobileCore i18n namespace.
-   * @param - The key for the string to translate. For example, "general.cancel".
-   * @param - Optional options to pass into the i18next system.key
+  /**
+   * Translate a string from the MobileCore i18n namespace.
+   * @param The key for the string to translate. For example, "general.cancel".
+   * @param Optional options to pass into the i18next system.key
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
@@ -109,8 +113,9 @@ export class MobileCore {
     return this._isKeyboardVisible;
   }
 
-  /** Initializes the MobileCore module.
-   * @param localization - The [[Localization]] object (from iModelJs).
+  /**
+   * Initializes the MobileCore module.
+   * @param localization - The {@link Localization} object (from iModelJs).
    */
   public static async initialize(localization: Localization): Promise<void> {
     this._localization = localization;
@@ -124,7 +129,8 @@ export class MobileCore {
     this._isInitialized = true;
   }
 
-  /** Checks if MobileCore is initialized.
+  /**
+   * Checks if MobileCore is initialized.
    * @returns true if MobileCore is initialized, or fals otherwise.
    * @public
    */
@@ -132,7 +138,8 @@ export class MobileCore {
     return this._isInitialized;
   }
 
-  /** Sets a CSS variable and emits [[MobileCore.onCssVariableDidChange]] to indicate the change.
+  /**
+   * Sets a CSS variable and emits {@link MobileCore.onCssVariableDidChange} to indicate the change.
    * @param name - The name of the CSS variable to set. (Must begin with "--".)
    * @param value - The new value for the CSS variable.
    * @param htmlElement - The HTMLElement in which to set the CSS variable, defaults to document.documentElement.
@@ -142,7 +149,8 @@ export class MobileCore {
     this.onCssVariableDidChange.emit({ names: new Set<string>([name]), htmlElement });
   }
 
-  /** Sets multiple CSS variable and emit [[MobileCore.onCssVariableDidChange]] to indicate the changes.
+  /**
+   * Sets multiple CSS variable and emit {@link MobileCore.onCssVariableDidChange} to indicate the changes.
    * @param variables - Array containing variable names and values to set. (Each name must begin with "--".)
    * @param htmlElement - The HTMLElement in which to set the CSS variables, defaults to document.documentElement.
    */
@@ -155,7 +163,8 @@ export class MobileCore {
     this.onCssVariableDidChange.emit({ names, htmlElement });
   }
 
-  /** Checks if the internet is currently reachable.
+  /**
+   * Checks if the internet is currently reachable.
    * @returns true if the internet is reachable, or false otherwise.
    * @public
    */
@@ -163,7 +172,8 @@ export class MobileCore {
     return this.internetReachabilityStatus !== ReachabilityStatus.NotReachable;
   }
 
-  /** Gets the current internet reachability status.
+  /**
+   * Gets the current internet reachability status.
    * @returns The current internet reachability status.
    * @public
    */
@@ -185,7 +195,8 @@ export class MobileCore {
     return this._urlSearchParams;
   }
 
-  /** Gets the value of a URL search parameter.
+  /**
+   * Gets the value of a URL search parameter.
    *
    * _Note:_ If the search parameter has a value, it is passed through decodeURIComponent to remove any URI encoding.
    * @param name The name of the URL search parameter to get
@@ -201,7 +212,8 @@ export class MobileCore {
     return undefined;
   }
 
-  /** Gets the name of the platform value in the current URL's hash parameters.
+  /**
+   * Gets the name of the platform value in the current URL's hash parameters.
    * @returns The platform value from the current URL's hash parameters, or "unknown" if there is no platform value.
    * @public
    */
@@ -209,7 +221,8 @@ export class MobileCore {
     return this.getUrlSearchParam("platform") ?? "unknown";
   }
 
-  /** Check to see if the current platform is iOS.
+  /**
+   * Check to see if the current platform is iOS.
    * @returns true if the current platform is iOS (or iPadOS), false otherwise.
    * @public
    */
@@ -217,7 +230,8 @@ export class MobileCore {
     return this.getPlatform() === "ios";
   }
 
-  /** Check to see if the current platform is Android.
+  /**
+   * Check to see if the current platform is Android.
    * @returns true if the current platform is Android, false otherwise.
    * @public
    */
@@ -225,11 +239,12 @@ export class MobileCore {
     return this.getPlatform() === "android";
   }
 
-  /** Returns a date no less than [[min]] and no greater than [[max]].
-   * @param value - The date to clamp.
-   * @param min - The optional minimum date. If this is undefined, there is no minimum date.
-   * @param max - The optional maximum date. If this is undefined, there is no maximum date.
-   * @returns [[value]], clamped to be between [[min]] and [[max]].
+  /**
+   * Returns a date no less than {@link min} and no greater than {@link max}.
+   * @param value The date to clamp.
+   * @param min The optional minimum date. If this is undefined, there is no minimum date.
+   * @param max The optional maximum date. If this is undefined, there is no maximum date.
+   * @returns `value`, clamped to be between {@link min} and {@link max}.
    * @public
    */
   public static clampedDate(value: Date, min?: Date, max?: Date) {
@@ -242,7 +257,8 @@ export class MobileCore {
     return new Date(value);
   }
 
-  /** Delete all files associated with the specified cached briefcase.
+  /**
+   * Delete all files associated with the specified cached briefcase.
    * @param briefcase The cached briefcase to delete.
    * @public
    */
@@ -250,11 +266,12 @@ export class MobileCore {
     await NativeApp.deleteBriefcase(briefcase.fileName);
   }
 
-  /** Delete all cached briefcases for the specified project, or all cached briefcases for all projects
+  /**
+   * Delete all cached briefcases for the specified project, or all cached briefcases for all projects
    * if a project is not specified.
    * @param projectId If set, the projectId of the project from which to delete all cached briefcases.
    *                  If unset, cached briefcases from all projects will be deleted.
-   * @returns The deleted briefcases as an array of [[LocalBriefcaseProps]].
+   * @returns The deleted briefcases as an array of {@link LocalBriefcaseProps}.
    * @public
    */
   public static async deleteCachedBriefcases(projectId?: string) {
@@ -269,18 +286,20 @@ export class MobileCore {
     return deletedBriefcases;
   }
 
-  /** Utility function to sleep for the specified number of milliseconds.
+  /**
+   * Utility function to sleep for the specified number of milliseconds.
    *
    * @param ms Number of milliseconds to sleep.
-   * @returns A promise that fulfills after [[ms]] milliseconds.
+   * @returns A promise that fulfills after {@link ms} milliseconds.
    */
   public static async sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  /** Function to disable pointer events in all IModelApp viewports.
+  /**
+   * Function to disable pointer events in all IModelApp viewports.
    *
-   * @returns Value to pass into [[reenableViewportPointerEvents]] to reenabled the pointer events in the
+   * @returns Value to pass into {@link reenableViewportPointerEvents} to reenabled the pointer events in the
    *          viewports where they were disabled.
    */
   public static disableAllViewportPointerEvents(): unknown {
@@ -297,9 +316,10 @@ export class MobileCore {
     return disabledDivs;
   }
 
-  /** Function to reenable pointer events disabled by [[disableAllViewportPointerEvents]].
+  /**
+   * Function to reenable pointer events disabled by {@link disableAllViewportPointerEvents}.
    *
-   * @param disabledDivs: Return value from [[disableAllViewportPointerEvents]].
+   * @param disabledDivs Return value from {@link disableAllViewportPointerEvents}.
    */
   public static reenableViewportPointerEvents(disabledDivs: unknown) {
     if (!Array.isArray(disabledDivs)) return;
@@ -377,7 +397,7 @@ export class MobileCore {
 }
 
 /**
- * Screen edge for use with [[getSafeAreaInset]].
+ * Screen edge for use with {@link getSafeAreaInset}.
  * @public
  */
 export enum ScreenEdge {
@@ -387,11 +407,12 @@ export enum ScreenEdge {
   Right = "right",
 }
 
-/** Returns the value of the given CSS variable as a number, or the given default value if the variable does not exist
+/**
+ * Returns the value of the given CSS variable as a number, or the given default value if the variable does not exist
  * or is not a number.
  * @param variable - The name of the CSS variable to read.
  * @param defaultValue - The default value to use if the variable does not exist or is not a number.
- * @returns The numeric value of the CSS variable, or [[defaultValue]].
+ * @returns The numeric value of the CSS variable, or {@link defaultValue}.
  * @public
  */
 export function getCssVariableAsNumberOrDefault(variable: string, defaultValue = 0): number {
@@ -400,7 +421,8 @@ export function getCssVariableAsNumberOrDefault(variable: string, defaultValue =
   return value;
 }
 
-/** Returns the size of the safe area for the specified screen edge.
+/**
+ * Returns the size of the safe area for the specified screen edge.
  * @param edge - The edge of the screen to get the safe area for.
  * @returns The size of the safe area on the specified screen edge.
  */
@@ -410,7 +432,8 @@ export function getSafeAreaInset(edge: ScreenEdge) {
   return isNaN(sai) ? 0 : sai;
 }
 
-/** Returns the input object without the given key.
+/**
+ * Returns the input object without the given key.
  * @param props - The input object.
  * @param keyName - The key to omit from the returned object.
  * @returns A copy of the input object without the key.
@@ -420,7 +443,8 @@ export function withoutProperty(props: any, keyName: string) {
   return rest;
 }
 
-/** Returns the input object without the "className" key.
+/**
+ * Returns the input object without the "className" key.
  * @param props - The input object.
  * @returns A copy of the input object without the "className" key.
  */
@@ -428,7 +452,7 @@ export function withoutClassName(props: any) {
   return withoutProperty(props, "className");
 }
 
-/** Convenience class for a [[BeUiEvent]] without any parameters */
+/** Convenience class for a {@link BeUiEvent} without any parameters */
 export class NullBeUiEvent extends BeUiEvent<null> {
   public override emit() {
     super.emit(null);
@@ -458,7 +482,7 @@ export function getEmphasizeElements(): [ScreenViewport | undefined, EmphasizeEl
 
 /**
  * Function to get all viewports.
- * @returns An array consisting of all viewports registered with [[IModelApp.viewManager]].
+ * @returns An array consisting of all viewports registered with {@link IModelApp.viewManager}.
  */
 export function getAllViewports() {
   return [...IModelApp.viewManager];

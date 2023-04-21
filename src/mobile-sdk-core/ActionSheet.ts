@@ -7,7 +7,7 @@ import { Messenger } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
 /**
- * Gravity used by [[ActionSheetProps]] on Android.
+ * Gravity used by {@link ActionSheetProps} on Android.
  * @public
  */
 export enum ActionSheetGravity {
@@ -21,7 +21,8 @@ export enum ActionSheetGravity {
   BottomRight = "bottomRight",
 }
 
-/** Properties for [[ActionSheet.show]]
+/**
+ * Properties for {@link presentActionSheet} function.
  * @public
  */
 export interface ActionSheetProps {
@@ -29,7 +30,8 @@ export interface ActionSheetProps {
   title?: string;
   /** Optional message to show on the action sheet. */
   message?: string;
-  /** Actions to perform by the action sheet.
+  /**
+   * Actions to perform by the action sheet.
    *
    * Note: If no action with an ActionStyle of Cancel is present, a default cancel action will be automatically
    * provided unless skipCancel is set to true. Note that iPads allow cancelation even if there is no cancel action,
@@ -50,7 +52,7 @@ export interface ActionSheetProps {
  * @param sourceRect The bounding rectangle of the control that is showing the action sheet.
  * @param senderId The optional sender ID to use for messaging. If undefined, this will be auto-generated.
  * @returns The name of the action the user selected, or undefined if the user cancels. If you set the onSelected
- *          callback for each [[AlertAction]], you can ignore the return value.
+ *          callback for each `AlertAction`, you can ignore the return value.
  * @public
  */
 export async function presentActionSheet(props: ActionSheetProps, sourceRect: DOMRect): Promise<string | undefined> {

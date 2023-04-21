@@ -6,14 +6,16 @@ import { ResponseError } from "@itwin/core-frontend/lib/cjs/request/Request";
 import { MessageNotImplementedError } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
-/** Base class for showing a user friendly error.
+/**
+ * Base class for showing a user friendly error.
  * For common errors, provide utility creation methods in UIError.
  * @public
  */
 export class UserFriendlyError extends Error {
 }
 
-/** Class for showing errors to the end user.
+/**
+ * Class for showing errors to the end user.
  * @public
  */
 export class UIError {
@@ -25,7 +27,8 @@ export class UIError {
     return MobileCore.translate(`ui-error.${key}`);
   }
 
-  /** Creates an error for use when the internet is unreachable.
+  /**
+   * Creates an error for use when the internet is unreachable.
    * @returns A UserFriendlyError with a localized internet unreachable message.
    * @public
    */
@@ -33,7 +36,8 @@ export class UIError {
     return new UserFriendlyError(this.i18n("internet-unreachable"));
   }
 
-  /** Create a UIError object from the error that is caught in an exception handler.
+  /**
+   * Create a UIError object from the error that is caught in an exception handler.
    * Note that this has logic detecting various error information in the given error, and creating an
    * appropriate UIError.
    * @param error: The error to convert into a UIError
