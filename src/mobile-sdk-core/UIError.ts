@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ResponseError } from "@itwin/core-frontend/lib/cjs/request/Request";
+import { HttpResponseError } from "@itwin/core-frontend/lib/cjs/request/Request";
 import { MessageNotImplementedError } from "./Messenger";
 import { MobileCore } from "./MobileCore";
 
@@ -55,13 +55,9 @@ export class UIError {
       if (error instanceof MessageNotImplementedError) {
         uiError.MessageNotImplemented = true;
       }
-      if (error instanceof ResponseError &&
-        error.hasOwnProperty("_data")) {
-        const errorData = (error as any)._data;
-        if (errorData.hasOwnProperty("errorId"))
-          uiError.errorId = errorData.errorId;
-        if (errorData.hasOwnProperty("errorMessage"))
-          uiError.Description = errorData.errorMessage;
+      if (error instanceof HttpResponseError) {
+        uiError.errorId = error.status;
+        uiError.Description = error.responseText;
       }
       uiError.Stack = error.stack;
       const anyError: any = error;
