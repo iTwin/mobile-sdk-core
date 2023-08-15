@@ -190,7 +190,7 @@ export class MobileCore {
   private static get urlSearchParams(): URLSearchParams {
     if (this._urlSearchParams === undefined) {
       const hash = new URL(document.URL).hash;
-      this._urlSearchParams = new URLSearchParams(hash.substr(1));
+      this._urlSearchParams = new URLSearchParams(hash.substring(1));
     }
     return this._urlSearchParams;
   }
