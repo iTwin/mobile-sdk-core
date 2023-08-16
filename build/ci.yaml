@@ -15,10 +15,10 @@ jobs:
         latest: true
 
     - bash: |
-        git checkout itwin-4
-      displayName: Switch back to itwin-4 branch
+        git checkout main
+      displayName: Switch back to main branch
       workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core
-      name: checkoutITwin4
+      name: checkoutMain
     - script: npm ci
       displayName: npm install
       workingDirectory: $(Build.SourcesDirectory)/mobile-sdk-core

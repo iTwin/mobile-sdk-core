@@ -6,7 +6,7 @@ stages:
 
 - stage: PublishCoreNpmjs
   displayName: Publish mobile-sdk-core to Npmjs
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/itwin-4'), eq(dependencies.BuildCore.outputs['Build.checkPublish.shouldPublish'], 'true'), eq(variables['performingRelease'], 'true'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(dependencies.BuildCore.outputs['Build.checkPublish.shouldPublish'], 'true'), eq(variables['performingRelease'], 'true'))
   variables:
     version: $[ stageDependencies.BuildCore.Build.outputs['checkPublish.version'] ]
 
