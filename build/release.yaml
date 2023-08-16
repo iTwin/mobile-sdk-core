@@ -10,27 +10,27 @@ resources:
     - repository: mobile-sdk-ios
       type: github
       name: iTwin/mobile-sdk-ios
-      ref: main
+      ref: release/itwin-3.7.x
       endpoint: iModelJs
     - repository: mobile-sdk-android
       type: github
       name: iTwin/mobile-sdk-android
-      ref: main
+      ref: release/itwin-3.7.x
       endpoint: iModelJs
     - repository: mobile-sdk-core
       type: github
       name: iTwin/mobile-sdk-core
-      ref: main
+      ref: release/itwin-3.7.x
       endpoint: iModelJs
     - repository: mobile-ui-react
       type: github
       name: iTwin/mobile-ui-react
-      ref: main
+      ref: release/itwin-3.7.x
       endpoint: iModelJs
     - repository: mobile-samples
       type: github
       name: iTwin/mobile-samples
-      ref: main
+      ref: release/itwin-3.7.x
       endpoint: iModelJs
     - repository: build-pipeline-scripts
       type: git
