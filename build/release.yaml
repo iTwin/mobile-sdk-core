@@ -52,9 +52,9 @@ stages:
         - checkout: mobile-samples
 
         - task: NodeTool@0
-          displayName: Use Node 16.x
+          displayName: Use Node 18.x
           inputs:
-            versionSpec: 16.x
+            versionSpec: 18.x
 
         - task: UsePythonVersion@0
           inputs:
@@ -91,9 +91,9 @@ stages:
         - checkout: mobile-samples
 
         - task: NodeTool@0
-          displayName: Use Node 16.x
+          displayName: Use Node 18.x
           inputs:
-            versionSpec: 16.x
+            versionSpec: 18.x
 
         - task: UsePythonVersion@0
           inputs:
@@ -130,9 +130,9 @@ stages:
         - checkout: mobile-samples
 
         - task: NodeTool@0
-          displayName: Use Node 16.x
+          displayName: Use Node 18.x
           inputs:
-            versionSpec: 16.x
+            versionSpec: 18.x
 
         - task: UsePythonVersion@0
           inputs:
