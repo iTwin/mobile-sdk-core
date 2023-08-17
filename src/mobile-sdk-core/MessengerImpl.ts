@@ -3,7 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { Base64Converter } from "./Base64Converter";
-import { MessageJsonError, MessageNotImplementedError, Messenger, QueryHandler } from "./Messenger";
+import { MessageNotImplementedError, Messenger, QueryHandler } from "./Messenger";
+import { MobileCore } from "./MobileCore";
 import { UIError } from "./UIError";
 
 // MessengerImpl implementation that works with iOS and Android.
@@ -11,6 +12,21 @@ import { UIError } from "./UIError";
 // pure ASCII, JavaScript's builtin atob() function would decode it. However, any
 // data that includes non-ASCII would not decode properly via atob(), so
 // Base64Converter.base64Utf8ToString() is used instead.
+
+class MessageJsonError extends Error {
+  public json: string;
+
+  constructor(json: string, message?: string) {
+    if (message !== undefined) {
+      super(message);
+    } else if (MobileCore.isInitialized) {
+      super(MobileCore.translate("messenger.json-error", { json }));
+    } else {
+      super(`Messenger JSON error: ${json}.`);
+    }
+    this.json = json;
+  }
+}
 
 /**
  * @internal

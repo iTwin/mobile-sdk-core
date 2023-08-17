@@ -11,7 +11,7 @@ import * as base64 from "base64-js";
 export class Base64Converter {
   /**
    * Convert a Base64-encoded UTF-8 string into a JavaScript string.
-   * @param base64String: The Base64-encoded UTF-8 string to convert.
+   * @param base64String The Base64-encoded UTF-8 string to convert.
    * @returns A JavaScript string corresponding to the UTF-8 string.
    * @public
    */

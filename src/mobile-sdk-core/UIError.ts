@@ -39,7 +39,7 @@ export class UIError {
    * Create a UIError object from the error that is caught in an exception handler.
    * Note that this has logic detecting various error information in the given error, and creating an
    * appropriate UIError.
-   * @param error: The error to convert into a UIError
+   * @param error The error to convert into a UIError
    * @returns A UIError representing the given error.
    */
   public static defaultCreate(error: any): UIError {
