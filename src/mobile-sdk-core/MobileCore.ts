@@ -97,8 +97,8 @@ export class MobileCore {
 
   /**
    * Translate a string from the MobileCore i18n namespace.
-   * @param The key for the string to translate. For example, "general.cancel".
-   * @param Optional options to pass into the i18next system.key
+   * @param key The key for the string to translate. For example, "general.cancel".
+   * @param options Optional options to pass into the i18next system.key
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {

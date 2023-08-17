@@ -50,7 +50,6 @@ export interface ActionSheetProps {
  * Function to present a native action sheet and return the user's selection.
  * @param props The properties of the action sheet.
  * @param sourceRect The bounding rectangle of the control that is showing the action sheet.
- * @param senderId The optional sender ID to use for messaging. If undefined, this will be auto-generated.
  * @returns The name of the action the user selected, or undefined if the user cancels. If you set the onSelected
  *          callback for each `AlertAction`, you can ignore the return value.
  * @public

@@ -24,15 +24,6 @@
     "lint": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "plugins": [
-      "@itwin"
-    ],
-    "extends": "plugin:@itwin/itwinjs-recommended",
-    "rules": {
-      "nonblock-statement-body-position": "off"
-    }
-  },
   "dependencies": {
     "@itwin/core-bentley": "4.1.0",
     "@itwin/core-common": "4.1.0",
@@ -48,7 +39,7 @@
     "base64-js": "^1.5.1"
   },
   "devDependencies": {
-    "@itwin/eslint-plugin": "4.0.0-dev.33",
+    "@itwin/eslint-plugin": "4.0.0-dev.48",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "cpx2": "^4.2.0",

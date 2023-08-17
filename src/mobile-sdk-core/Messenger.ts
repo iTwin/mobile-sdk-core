@@ -6,7 +6,7 @@ import { MobileCore } from "./MobileCore";
 
 /**
  * Type used to listen for queries from native code.
- * @param message: The optional message data received from the native code.
+ * @param message The optional message data received from the native code.
  * @returns A promise containing the optional response to be sent back to the native code.
  */
 export declare type QueryListener = (message: any) => Promise<any>;
@@ -34,21 +34,6 @@ export class MessageNotImplementedError extends Error {
   }
 }
 
-export class MessageJsonError extends Error {
-  public json: string;
-
-  constructor(json: string, message?: string) {
-    if (message !== undefined) {
-      super(message);
-    } else if (MobileCore.isInitialized) {
-      super(MobileCore.translate("messenger.json-error", { json }));
-    } else {
-      super(`Messenger JSON error: ${json}.`);
-    }
-    this.json = json;
-  }
-}
-
 /**
  * Object returned by {@link Messenger.onQuery} to handle a query.
  * @public
@@ -61,8 +46,8 @@ export class QueryHandler {
 
   /**
    * Call to set the handler function for this query.
-   * @param handler: The handler function for this query.
-   * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
+   * @param handler The handler function for this query.
+   * @param scope The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
    * @returns: An arrow function that when called, unsets the handler.
    * @public
    */
@@ -74,8 +59,8 @@ export class QueryHandler {
 
   /**
    * Call to set the handler function for this query. It will be automatically unset after the first call.
-   * @param handler: The handler function for this query.
-   * @param scope: The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
+   * @param handler The handler function for this query.
+   * @param scope The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
    * @returns: An arrow function that when called, unsets the handler.
    * @public
    */
@@ -87,8 +72,8 @@ export class QueryHandler {
 
   /**
    * Unset the handler function for this query.
-   * @param handler: The handler function to unset.
-   * @param scope: The optional scope associated with the handler.
+   * @param handler The handler function to unset.
+   * @param scope The optional scope associated with the handler.
    * @public
    */
   public unsetHandler(handler: QueryListener, scope?: any): boolean {
@@ -138,10 +123,10 @@ export class Messenger {
 
   /**
    * Send a query to native code and return its response.
-   * @param name: The name of the query.
-   * @param message: Optional message data to send in the query. This cannot use types that are not supported by
-   *                 the current platform's JavaScript<->Native communications mechanism. (For example, Date objects
-   *                 probably won't work, and must be first converted to strings.)
+   * @param name The name of the query.
+   * @param message Optional message data to send in the query. This cannot use types that are not supported by
+   *                the current platform's JavaScript<->Native communications mechanism. (For example, Date objects
+   *                probably won't work, and must be first converted to strings.)
    * @returns The response from the native code, if any.
    * @public
    */
@@ -155,10 +140,10 @@ export class Messenger {
   /**
    * Wrapper around {@link query} that is not async and does not return a result. Use when a query does not have
    * a meaningful result and you don't want to wait for it to complete.
-   * @param name: The name of the message to send.
-   * @param message: Optional data to send with the message. This data must be made up of types that can be communicated
-   *                 to native code using the platform's mechanism. So, for example, it cannot include a function, or a
-   *                 JavaScript Date object.
+   * @param name The name of the message to send.
+   * @param message Optional data to send with the message. This data must be made up of types that can be communicated
+   *                to native code using the platform's mechanism. So, for example, it cannot include a function, or a
+   *                JavaScript Date object.
    * @public
    */
   public static sendMessage(name: string, message?: any) {
@@ -167,7 +152,7 @@ export class Messenger {
 
   /**
    * Get the QueryHandler for the given query.
-   * @param messageName: The name of the query being handled.
+   * @param messageName The name of the query being handled.
    * @returns Unique QueryHandler object for the given query.
    */
   public static onQuery(messageName: string): QueryHandler {
