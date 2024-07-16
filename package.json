@@ -1,6 +1,6 @@
 {
   "name": "@itwin/mobile-sdk-core",
-  "version": "0.22.5",
+  "version": "0.22.6",
   "description": "Bentley iTwin Mobile Core module",
   "repository": {
     "type": "git",
@@ -25,17 +25,17 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@itwin/core-bentley": "4.7.2",
-    "@itwin/core-common": "4.7.2",
-    "@itwin/core-frontend": "4.7.2",
-    "@itwin/core-geometry": "4.7.2",
-    "@itwin/core-i18n": "4.7.2",
-    "@itwin/core-markup": "4.7.2",
-    "@itwin/core-orbitgt": "4.7.2",
-    "@itwin/core-quantity": "4.7.2",
-    "@itwin/presentation-common": "4.7.2",
-    "@itwin/presentation-frontend": "4.7.2",
-    "@itwin/webgl-compatibility": "4.7.2",
+    "@itwin/core-bentley": "4.7.6",
+    "@itwin/core-common": "4.7.6",
+    "@itwin/core-frontend": "4.7.6",
+    "@itwin/core-geometry": "4.7.6",
+    "@itwin/core-i18n": "4.7.6",
+    "@itwin/core-markup": "4.7.6",
+    "@itwin/core-orbitgt": "4.7.6",
+    "@itwin/core-quantity": "4.7.6",
+    "@itwin/presentation-common": "4.7.6",
+    "@itwin/presentation-frontend": "4.7.6",
+    "@itwin/webgl-compatibility": "4.7.6",
     "base64-js": "^1.5.1"
   },
   "devDependencies": {
