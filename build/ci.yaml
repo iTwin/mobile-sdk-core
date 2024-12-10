@@ -8,10 +8,10 @@ jobs:
     - checkout: mobile-ui-react
       clean: all
 
-    - task: NodeTool@0
-      displayName: Use Node 18.x
+    - task: UseNode@1
+      displayName: Use Node 20.x
       inputs:
-        versionSpec: 18.x
+        version: 20.x
         latest: true
 
     - bash: |

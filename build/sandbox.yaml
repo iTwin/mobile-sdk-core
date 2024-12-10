@@ -25,10 +25,10 @@ stages:
         - checkout: self
         - checkout: mobile-sdk-ios
 
-        - task: NodeTool@0
-          displayName: Use Node 18.x
+        - task: UseNode@1
+          displayName: Use Node 20.x
           inputs:
-            versionSpec: 18.x
+            version: 20.x
 
         - task: UsePythonVersion@0
           inputs:
