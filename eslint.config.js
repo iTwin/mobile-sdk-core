@@ -8,10 +8,5 @@ module.exports = [
   {
     files: ["**/*.{ts,tsx}"],
     ...iTwinPlugin.configs.jsdocConfig,
-  },
-  {
-    rules: {
-        "nonblock-statement-body-position": "off",
-    }
   }
 ];

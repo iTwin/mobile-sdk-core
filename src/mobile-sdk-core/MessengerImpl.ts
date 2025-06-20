@@ -89,7 +89,7 @@ export class MessengerImpl {
       try {
         // See note before class.
         parsedMessage = JSON.parse(Base64Converter.base64Utf8ToString(messageJson));
-      } catch (ex) {
+      } catch {
         // ignore
       }
       if (!parsedMessage) {
@@ -119,7 +119,7 @@ export class MessengerImpl {
       try {
         // See note before class.
         message = JSON.parse(Base64Converter.base64Utf8ToString(messageJson));
-      } catch (ex) {
+      } catch {
         // ignore
       }
       return queryHandler.performQuery(message);

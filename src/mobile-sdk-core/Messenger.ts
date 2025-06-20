@@ -138,7 +138,7 @@ export class Messenger {
   }
 
   /**
-   * Wrapper around {@link query} that is not async and does not return a result. Use when a query does not have
+   * Wrapper around {@link Messenger.query} that is not async and does not return a result. Use when a query does not have
    * a meaningful result and you don't want to wait for it to complete.
    * @param name The name of the message to send.
    * @param message Optional data to send with the message. This data must be made up of types that can be communicated
