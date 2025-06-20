@@ -299,7 +299,7 @@ export class MobileCore {
   /**
    * Function to disable pointer events in all IModelApp viewports.
    *
-   * @returns Value to pass into {@link reenableViewportPointerEvents} to reenabled the pointer events in the
+   * @returns Value to pass into {@link MobileCore.reenableViewportPointerEvents} to reenabled the pointer events in the
    *          viewports where they were disabled.
    */
   public static disableAllViewportPointerEvents(): unknown {
@@ -317,9 +317,9 @@ export class MobileCore {
   }
 
   /**
-   * Function to reenable pointer events disabled by {@link disableAllViewportPointerEvents}.
+   * Function to reenable pointer events disabled by {@link MobileCore.disableAllViewportPointerEvents}.
    *
-   * @param disabledDivs Return value from {@link disableAllViewportPointerEvents}.
+   * @param disabledDivs Return value from {@link MobileCore.disableAllViewportPointerEvents}.
    */
   public static reenableViewportPointerEvents(disabledDivs: unknown) {
     if (!Array.isArray(disabledDivs)) return;
