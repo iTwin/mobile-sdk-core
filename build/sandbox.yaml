@@ -10,7 +10,7 @@ resources:
     - repository: mobile-sdk-ios
       type: github
       name: iTwin/mobile-sdk-ios
-      ref: release/itwin-4.x
+      ref: main
       endpoint: iModelJs
 
 stages:
