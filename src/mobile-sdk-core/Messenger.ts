@@ -29,7 +29,7 @@ export class MessageNotImplementedError extends Error {
       super(MobileCore.translate("messenger.query-not-handled-error", { name }));
     } else {
       const name = messageName ?? "<Unknown>";
-      super(`No handler for \"${name}\" query.`);
+      super(`No handler for "${name}" query.`);
     }
   }
 }
