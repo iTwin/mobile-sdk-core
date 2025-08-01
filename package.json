@@ -1,6 +1,6 @@
 {
   "name": "@itwin/mobile-sdk-core",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "description": "Bentley iTwin Mobile Core module",
   "repository": {
     "type": "git",
