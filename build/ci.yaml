@@ -32,7 +32,7 @@ jobs:
         pkgName=$(node -p "require('./package.json').name")
         pkgVer=$(node -p "require('./package.json').version")
 
-        ver=$(npm view $pkgName versions --json | grep '"0\.20\.' | cut -d\" -f2 | sort -V | tail -1)
+        ver=$(npm view $pkgName versions --json | grep -E '("0\.20\.|"0\.30\.|"0\.31\.|"0\.32\.)' | cut -d\" -f2 | sort -V | tail -1)
 
         if [ -z "$ver" ]; then
           ver=0.11.0
