@@ -8,5 +8,10 @@ module.exports = [
   {
     files: ["**/*.{ts,tsx}"],
     ...iTwinPlugin.configs.jsdocConfig,
-  }
+  },
+  {
+    rules: {
+      "@typescript-eslint/no-deprecated": "warn"
+    }
+  },
 ];
