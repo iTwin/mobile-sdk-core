@@ -38,10 +38,10 @@ resources:
 
 stages:
 - stage: Stage1
-  displayName: Run newVersion.py stage1
+  displayName: newVersion stage1
   jobs:
     - job: Stage1Job
-      displayName: Run newVersion.py stage1
+      displayName: newVersion stage1
       pool:
         vmImage: ubuntu-latest
       steps:
@@ -76,11 +76,26 @@ stages:
 
 - template: cd-stages-core.yaml
 
+- stage: WaitForCoreNpmjs
+  displayName: Wait for mobile-sdk-core on npmjs.org
+  jobs:
+    - job: WaitForCoreNpmjsJob
+      displayName: Approve mobile-sdk-core availability
+      pool: server
+      timeoutInMinutes: 4320
+      steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 4320
+          inputs:
+            notifyUsers: $(Build.RequestedForEmail)
+            instructions: Verify that the newly published @itwin/mobile-sdk-core version is available on npmjs.org, then resume the release.
+            onTimeout: reject
+
 - stage: Stage2
-  displayName: Run newVersion.py stage2
+  displayName: newVersion stage2
   jobs:
     - job: Stage2Job
-      displayName: Run newVersion.py stage2
+      displayName: newVersion stage2
       pool:
         vmImage: ubuntu-latest
       steps:
@@ -115,11 +130,26 @@ stages:
 
 - template: build/cd-stages-ui-react.yaml@mobile-ui-react
 
+- stage: WaitForUiReactNpmjs
+  displayName: Wait for mobile-ui-react on npmjs.org
+  jobs:
+    - job: WaitForUiReactNpmjsJob
+      displayName: Approve mobile-ui-react availability
+      pool: server
+      timeoutInMinutes: 4320
+      steps:
+        - task: ManualValidation@0
+          timeoutInMinutes: 4320
+          inputs:
+            notifyUsers: $(Build.RequestedForEmail)
+            instructions: Verify that the newly published @itwin/mobile-ui-react version is available on npmjs.org, then resume the release.
+            onTimeout: reject
+
 - stage: Stage3
-  displayName: Run newVersion.py stage3
+  displayName: newVersion stage3
   jobs:
     - job: Stage3Job
-      displayName: Run newVersion.py stage3
+      displayName: newVersion stage3
       pool:
         vmImage: ubuntu-latest
       steps:
