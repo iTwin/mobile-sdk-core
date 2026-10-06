@@ -2,106 +2,11 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+import { Base64Converter } from "./Base64Converter";
+import { MessengerImpl, QueryResponse, QueryTransport, TransportQueryHandler } from "./common/MessengerImpl";
+import { QueryHandler } from "./common/QueryHandler";
+import { UIError } from "./common/UIError";
 import { MobileCore } from "./MobileCore";
-
-/**
- * Type used to listen for queries from native code.
- * @param message The optional message data received from the native code.
- * @returns A promise containing the optional response to be sent back to the native code.
- */
-export declare type QueryListener = (message: any) => Promise<any>;
-
-/**
- * @internal
- */
-class QueryContext {
-  constructor(public handler: QueryListener | undefined, public scope: any, public once: boolean) { }
-}
-
-/**
- * Error subclass that is used when native code sends a query that does not have a handler.
- * @public
- */
-export class MessageNotImplementedError extends Error {
-  constructor(messageName?: string) {
-    if (MobileCore.isInitialized) {
-      const name = messageName ?? MobileCore.translate("messenger.unknown");
-      super(MobileCore.translate("messenger.query-not-handled-error", { name }));
-    } else {
-      const name = messageName ?? "<Unknown>";
-      super(`No handler for "${name}" query.`);
-    }
-  }
-}
-
-/**
- * Object returned by {@link Messenger.onQuery} to handle a query.
- * @public
- */
-export class QueryHandler {
-  /**
-   * @internal
-   */
-  private _handler?: QueryContext;
-
-  /**
-   * Call to set the handler function for this query.
-   * @param handler The handler function for this query.
-   * @param scope The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
-   * @returns: An arrow function that when called, unsets the handler.
-   * @public
-   */
-  public setHandler(handler: QueryListener, scope?: any): () => void {
-    this._handler = new QueryContext(handler, scope, false);
-    const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
-    return () => event.unsetHandler(handler, scope);
-  }
-
-  /**
-   * Call to set the handler function for this query. It will be automatically unset after the first call.
-   * @param handler The handler function for this query.
-   * @param scope The optional scope that acts as "this" for the handler. When using arrow functions, this will normally be undefined.
-   * @returns: An arrow function that when called, unsets the handler.
-   * @public
-   */
-  public setOnce(handler: QueryListener, scope?: any): () => void {
-    this._handler = new QueryContext(handler, scope, true);
-    const event = this; // eslint-disable-line @typescript-eslint/no-this-alias
-    return () => event.unsetHandler(handler, scope);
-  }
-
-  /**
-   * Unset the handler function for this query.
-   * @param handler The handler function to unset.
-   * @param scope The optional scope associated with the handler.
-   * @public
-   */
-  public unsetHandler(handler: QueryListener, scope?: any): boolean {
-    if (!this._handler) return false;
-    if (this._handler.handler === handler && this._handler.scope === scope) {
-      this._handler = undefined;
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Called by {@link Messenger} when a query arrives. Do not call.
-   * @internal
-   */
-  public async performQuery(message: any) {
-    if (this._handler) {
-      if (this._handler.handler) {
-        const result = await this._handler.handler.apply(this._handler.scope, [message]);
-        if (this._handler.once) {
-          this._handler = undefined;
-        }
-        return result;
-      }
-    }
-    return null;
-  }
-}
 
 /**
  * Class for handling communication to and from native code.
@@ -111,13 +16,22 @@ export class Messenger {
   /**
    * @internal
    */
-  private static _impl: any;
-  public static queryHandlers: { [name: string]: QueryHandler } = {};
+  private static _impl = new MessengerImpl();
+
+  /** Gets all query handlers currently registered with this messenger. */
+  public static get queryHandlers(): { [name: string]: QueryHandler } {
+    return Messenger._impl.queryHandlers;
+  }
+
+  /** Sets query handlers currently registered with this messenger. */
+  public static set queryHandlers(handlers: { [name: string]: QueryHandler }) {
+    Messenger._impl.queryHandlers = handlers;
+  }
 
   /** Must be called during application startup before any messages are sent in either direction. */
   public static async initialize() {
-    if (Messenger._impl === undefined && (MobileCore.isIosPlatform || MobileCore.isAndroidPlatform)) {
-      Messenger._impl = await import("./MessengerImpl");
+    if (!Messenger._impl.isInitialized && (MobileCore.isIosPlatform || MobileCore.isAndroidPlatform)) {
+      Messenger._impl.initialize((onQueryReceivedCallback) => new FrontendQueryTransport(onQueryReceivedCallback));
     }
   }
 
@@ -131,10 +45,7 @@ export class Messenger {
    * @public
    */
   public static async query(name: string, message?: any) {
-    if (Messenger._impl) {
-      return Messenger._impl.MessengerImpl.query(name, message);
-    }
-    return undefined;
+    return Messenger._impl.query(name, message);
   }
 
   /**
@@ -156,11 +67,103 @@ export class Messenger {
    * @returns Unique QueryHandler object for the given query.
    */
   public static onQuery(messageName: string): QueryHandler {
-    let query = Messenger.queryHandlers[messageName];
-    if (!query) {
-      Messenger.queryHandlers[messageName] = new QueryHandler();
-      query = Messenger.queryHandlers[messageName];
+    return Messenger._impl.getOrAddQueryHandler(messageName);
+  }
+}
+
+/**
+ * Query transport that passes messages to and from native UI via iOS and Android webviews.
+ *
+ * Note: Incoming data from native side is BASE64-encoded UTF-8. For any data that is
+ * pure ASCII, JavaScript's builtin atob() function would decode it. However, any
+ * data that includes non-ASCII would not decode properly via atob(), so
+ * Base64Converter.base64Utf8ToString() is used instead.
+ * @internal
+ */
+class FrontendQueryTransport extends QueryTransport {
+  /**
+   * @internal
+   */
+  private _anyWindow: any = window;
+  /**
+   * @internal
+   */
+  private _queryResponse: (responseJson: string) => void;
+  /**
+   * @internal
+   */
+  private _query: (messageJson: string) => void;
+
+  constructor(onQueryReceived: TransportQueryHandler) {
+    super(onQueryReceived);
+
+    if (this._anyWindow.webkit) {
+      // iOS
+      this._queryResponse = (responseJson) => this._anyWindow.webkit.messageHandlers.Bentley_ITMMessenger_QueryResponse.postMessage(responseJson);
+      this._query = (messageJson) => this._anyWindow.webkit.messageHandlers.Bentley_ITMMessenger_Query.postMessage(messageJson);
+    } else if (this._anyWindow.Bentley_ITMMessenger) {
+      // Android
+      this._queryResponse = (responseJson) => this._anyWindow.Bentley_ITMMessenger.queryResponse(responseJson);
+      this._query = (messageJson) => this._anyWindow.Bentley_ITMMessenger.query(messageJson);
+    } else {
+      throw new Error("This MessengerImpl only supports iOS and Android.");
     }
-    return query;
+
+    this._anyWindow.Bentley_ITMMessenger_Query = this._handleIncomingQuery;
+  }
+
+  private _handleIncomingQuery = async (name: string, queryId: number, messageJson: string) => {
+    let decodedMessageJson: string | undefined;
+    try {
+      decodedMessageJson = Base64Converter.base64Utf8ToString(messageJson);
+    } catch {
+      // ignore
+    }
+
+    const responseMessage: any = { queryId };
+    try {
+      const response = await this._onQueryReceived(name, decodedMessageJson ?? "");
+      responseMessage.response = response;
+    } catch (error) {
+      responseMessage.error = UIError.create(error);
+    }
+    this._queryResponse(JSON.stringify(responseMessage));
+  }
+
+  public async sendQuery(name: string, queryId: number, message: any): Promise<QueryResponse> {
+    const responseName = `Bentley_ITMMessenger_QueryResponse${queryId}`;
+    const responsePromise = new Promise<string | undefined>((resolve) => {
+      this._anyWindow[responseName] = resolve;
+    });
+
+    this._query(JSON.stringify({ name, message, queryId }));
+
+    const responseJson = await responsePromise;
+    delete this._anyWindow[responseName];
+
+    if (responseJson === undefined)
+      return {};
+
+    let response: any;
+    try {
+      // See note before class.
+      response = JSON.parse(Base64Converter.base64Utf8ToString(responseJson));
+    } catch {
+      // ignore
+    }
+
+    if (!response) {
+      return {};
+    }
+
+    if (response.unhandled) {
+      return { isUnhandled: true };
+    }
+
+    if (response.error !== undefined) {
+      return { error: response.error };
+    }
+
+    return { data: response.response };
   }
 }
