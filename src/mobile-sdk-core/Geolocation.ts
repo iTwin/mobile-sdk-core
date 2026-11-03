@@ -32,9 +32,66 @@ const geolocationData = {
 
 const anyGeolocation: any = navigator.geolocation;
 
+const androidBridge = anyWindow.Bentley_ITMGeolocation;
+const iosBridge = anyWindow.webkit?.messageHandlers.Bentley_ITMGeolocation;
+const secureBridge = typeof androidBridge?.postMessage === "function" || anyWindow.Bentley_ITMGeolocationSecureBridge === true;
+const documentId = secureBridge ? Array.from(window.crypto.getRandomValues(new Uint32Array(4))).join("-") : undefined;
+let sessionId: string | undefined;
+let sessionReady = false;
+let pendingRequests: Array<() => void> = [];
+
+function postRequest(messageName: string, positionId: number, options?: PositionOptions) {
+  const send = () => {
+    const handlers = messageName === "watchPosition" ? geolocationData.watch : geolocationData.position;
+    if (messageName !== "clearWatch" && !handlers.positionHandlers[positionId]) return;
+    const message = JSON.stringify({ messageName, positionId, sessionId, documentId, options });
+    if (typeof androidBridge?.postMessage === "function") {
+      androidBridge.postMessage(message);
+    } else {
+      iosBridge.postMessage(message);
+    }
+  };
+  if (sessionReady) {
+    send();
+  } else {
+    pendingRequests.push(send);
+  }
+}
+
+function initializeSession(nativeSessionId: string) {
+  if (sessionId === nativeSessionId) return;
+  const replacingSession = sessionId !== undefined;
+  sessionId = nativeSessionId;
+  sessionReady = false;
+  if (replacingSession) {
+    pendingRequests = [];
+    const staleHandlers = [...Object.values(geolocationData.watch.positionHandlers), ...Object.values(geolocationData.position.positionHandlers)];
+    geolocationData.watch.positionHandlers = {};
+    geolocationData.position.positionHandlers = {};
+    for (const handler of staleHandlers) {
+      try {
+        handler.errorCallback?.({ code: 2, message: "Geolocation document session ended.", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 }); // eslint-disable-line @typescript-eslint/naming-convention
+      } catch {
+        console.error("Geolocation error callback failed during session cleanup."); // eslint-disable-line no-console
+      }
+    }
+  }
+  const message = JSON.stringify({ messageName: "ready", sessionId, documentId });
+  if (typeof androidBridge?.postMessage === "function") {
+    androidBridge.postMessage(message);
+  } else {
+    iosBridge.postMessage(message);
+  }
+}
+
 function watchPosition(successCallback: PositionCallback, errorCallback?: PositionErrorCallback, options?: PositionOptions) {
   const positionId = ++geolocationData.watch.lastId;
   geolocationData.watch.positionHandlers[positionId] = { successCallback, errorCallback };
+
+  if (secureBridge) {
+    postRequest("watchPosition", positionId, typeof androidBridge?.postMessage === "function" ? undefined : options);
+    return positionId;
+  }
 
   // Try using Android interface
   anyWindow.Bentley_ITMGeolocation?.watchPosition(positionId);
@@ -50,6 +107,16 @@ function watchPosition(successCallback: PositionCallback, errorCallback?: Positi
 
 function clearWatch(positionId: number) {
   if (!geolocationData.watch.positionHandlers[positionId]) return;
+  delete geolocationData.watch.positionHandlers[positionId];
+
+  if (secureBridge) {
+    try {
+      postRequest("clearWatch", positionId);
+    } catch {
+      console.error("Unable to enqueue geolocation watch cancellation."); // eslint-disable-line no-console
+    }
+    return;
+  }
 
   // Try using Android interface
   anyWindow.Bentley_ITMGeolocation?.clearWatch(positionId);
@@ -59,12 +126,16 @@ function clearWatch(positionId: number) {
     messageName: "clearWatch",
     positionId,
   }));
-  delete geolocationData.watch.positionHandlers[positionId];
 }
 
 function getCurrentPosition(successCallback: PositionCallback, errorCallback?: PositionErrorCallback, options?: PositionOptions) {
   const positionId = ++geolocationData.position.lastId;
   geolocationData.position.positionHandlers[positionId] = { successCallback, errorCallback };
+
+  if (secureBridge) {
+    postRequest("getCurrentPosition", positionId, typeof androidBridge?.postMessage === "function" ? undefined : options);
+    return;
+  }
 
   // Try using Android interface
   anyWindow.Bentley_ITMGeolocation?.getCurrentPosition(positionId);
@@ -92,7 +163,19 @@ function positionUpdate(messageData: string, geolocation: BentleyGeolocation) {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function Bentley_ITMGeolocationResponse(messageName: string, messageData: string) {
+function Bentley_ITMGeolocationResponse(messageName: string, messageData: string, responseSessionId?: string, responseDocumentId?: string) {
+  if (secureBridge) {
+    if (responseSessionId !== sessionId || responseDocumentId !== documentId) return;
+    if (messageName === "ready") {
+      if (sessionReady) return;
+      sessionReady = true;
+      const requests = pendingRequests;
+      pendingRequests = [];
+      requests.forEach((send) => send());
+      return;
+    }
+    if (!sessionReady) return;
+  }
   switch (messageName) {
     case "watchPosition":
       positionUpdate(messageData, geolocationData.watch);
@@ -114,4 +197,17 @@ if (anyWindow.Bentley_ITMGeolocation !== undefined || anyWindow.webkit?.messageH
   anyGeolocation.clearWatch = clearWatch;
   anyGeolocation.getCurrentPosition = getCurrentPosition;
   anyWindow.Bentley_ITMGeolocationResponse = Bentley_ITMGeolocationResponse;
+  if (secureBridge) {
+    anyWindow.Bentley_ITMGeolocationDocumentId = documentId;
+    anyWindow.Bentley_ITMGeolocationInitialize = initializeSession;
+    if (typeof androidBridge?.postMessage === "function") {
+      androidBridge.onmessage = (event: MessageEvent<string>) => {
+        const response = JSON.parse(event.data);
+        Bentley_ITMGeolocationResponse(response.messageName, response.messageData, response.sessionId, response.documentId);
+      };
+    }
+    if (typeof anyWindow.Bentley_ITMGeolocationNativeSession === "string") {
+      initializeSession(anyWindow.Bentley_ITMGeolocationNativeSession);
+    }
+  }
 }
