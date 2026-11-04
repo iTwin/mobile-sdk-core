@@ -43,12 +43,26 @@ let pendingRequests: Array<() => void> = [];
 function postRequest(messageName: string, positionId: number, options?: PositionOptions) {
   const send = () => {
     const handlers = messageName === "watchPosition" ? geolocationData.watch : geolocationData.position;
-    if (messageName !== "clearWatch" && !handlers.positionHandlers[positionId]) return;
-    const message = JSON.stringify({ messageName, positionId, sessionId, documentId, options });
-    if (typeof androidBridge?.postMessage === "function") {
-      androidBridge.postMessage(message);
-    } else {
-      iosBridge.postMessage(message);
+    const handler = messageName === "clearWatch" ? undefined : handlers.positionHandlers[positionId];
+    if (messageName !== "clearWatch" && !handler) return;
+    try {
+      const message = JSON.stringify({ messageName, positionId, sessionId, documentId, options });
+      if (typeof androidBridge?.postMessage === "function") {
+        androidBridge.postMessage(message);
+      } else {
+        iosBridge.postMessage(message);
+      }
+    } catch {
+      if (!handler) {
+        console.error("Unable to send geolocation watch cancellation."); // eslint-disable-line no-console
+        return;
+      }
+      delete handlers.positionHandlers[positionId];
+      try {
+        handler.errorCallback?.({ code: 2, message: "Unable to send geolocation request.", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 }); // eslint-disable-line @typescript-eslint/naming-convention
+      } catch {
+        console.error("Geolocation error callback failed after request failure."); // eslint-disable-line no-console
+      }
     }
   };
   if (sessionReady) {
