@@ -46,7 +46,12 @@ function postRequest(messageName: string, positionId: number, options?: Position
     const handler = messageName === "clearWatch" ? undefined : handlers.positionHandlers[positionId];
     if (messageName !== "clearWatch" && !handler) return;
     try {
-      const message = JSON.stringify({ messageName, positionId, sessionId, documentId, options });
+      const positionOptions = options ? {
+        enableHighAccuracy: options.enableHighAccuracy,
+        maximumAge: options.maximumAge,
+        timeout: options.timeout,
+      } : undefined;
+      const message = JSON.stringify({ messageName, positionId, sessionId, documentId, options: positionOptions });
       if (typeof androidBridge?.postMessage === "function") {
         androidBridge.postMessage(message);
       } else {
