@@ -5,6 +5,7 @@
 import { BeUiEvent } from "@itwin/core-bentley";
 import { LocalBriefcaseProps, Localization } from "@itwin/core-common";
 import { EmphasizeElements, IModelApp, NativeApp, ScreenViewport } from "@itwin/core-frontend";
+import { LocalizationProvider } from "./common/LocalizationProvider";
 import { Messenger } from "./Messenger";
 import "./Geolocation"; // Just importing this activates the Polyfill.
 import "./MobileCore.scss";
@@ -67,10 +68,6 @@ export class MobileCore {
   /**
    * @internal
    */
-  private static _localization: Localization;
-  /**
-   * @internal
-   */
   private static _isKeyboardVisible = false;
   /**
    * @internal
@@ -102,10 +99,7 @@ export class MobileCore {
    * @returns The translated string, or key if it is not found.
    */
   public static translate(key: string, options?: any) {
-    if (this._localization === undefined) {
-      return `Attempt to translate ${key} before localization init.`;
-    }
-    return this._localization.getLocalizedString(`iTwinMobileCore:${key}`, options);
+    return LocalizationProvider.translate(key, options);
   }
 
   /** Property indicating if the software keyboard is currently visible. */
@@ -118,8 +112,7 @@ export class MobileCore {
    * @param localization - The {@link Localization} object (from iModelJs).
    */
   public static async initialize(localization: Localization): Promise<void> {
-    this._localization = localization;
-    await localization.registerNamespace("iTwinMobileCore");
+    await LocalizationProvider.initialize(localization);
     await Messenger.initialize();
     Messenger.onQuery("Bentley_ITM_keyboardWillShow").setHandler(MobileCore._keyboardWillShow);
     Messenger.onQuery("Bentley_ITM_keyboardDidShow").setHandler(MobileCore._keyboardDidShow);
