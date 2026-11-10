@@ -2,6 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+import { Logger } from "@itwin/core-bentley";
 import { MobileHost } from "@itwin/core-mobile/lib/cjs/MobileBackend";
 import { MessengerImpl, QueryResponse, QueryTransport, TransportQueryHandler } from "../common/MessengerImpl";
 import { QueryHandler } from "../common/QueryHandler";
@@ -47,7 +48,9 @@ export class Messenger {
    * @public
    */
   public static sendMessage(name: string, message?: any) {
-    void Messenger.query(name, message);
+    void Messenger.query(name, message).catch((error) => {
+      Logger.logError("mobile-sdk-core", error, { origin: "Messenger.sendMessage()", messageName: name });
+    });
   }
 
   /**
