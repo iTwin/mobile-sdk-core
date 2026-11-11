@@ -2,8 +2,8 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { MessageNotImplementedError } from "./Messenger";
-import { MobileCore } from "./MobileCore";
+import { LocalizationProvider } from "./LocalizationProvider";
+import { MessageNotImplementedError } from "./MessengerErrors";
 
 /**
  * Base class for showing a user friendly error.
@@ -23,7 +23,7 @@ export class UIError {
   public static create = (error: any) => UIError.defaultCreate(error);
 
   public static i18n(key: string): string {
-    return MobileCore.translate(`ui-error.${key}`);
+    return LocalizationProvider.translate(`ui-error.${key}`);
   }
 
   /**
