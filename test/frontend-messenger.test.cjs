@@ -88,6 +88,43 @@ for (const platform of ["android", "ios"]) {
     assert.equal(f.sent.find((m) => m.queryId === 43).error.Description, "handler failed");
   });
 
+  test(`${platform}: startup requests snapshot nested caller data before enqueueing`, async () => {
+    const f = fixture(platform);
+    const message = { value: 1, nested: { value: 1 }, items: [1], nullable: null };
+    const first = f.transport.sendQuery("snapshot", 0, message);
+    message.value = 2;
+    message.nested.value = 2;
+    message.items.push(2);
+    const second = f.transport.sendQuery("snapshot", 1, message);
+    message.value = 3;
+    message.nested.value = 3;
+    message.items.push(3);
+    const omitted = f.transport.sendQuery("omitted", 2);
+    assert.equal(f.sent.length, 0);
+    f.ready();
+    assert.deepEqual(f.sent[1].message, { value: 1, nested: { value: 1 }, items: [1], nullable: null });
+    assert.deepEqual(f.sent[2].message, { value: 2, nested: { value: 2 }, items: [1, 2], nullable: null });
+    assert.equal(Object.hasOwn(f.sent[3], "message"), false);
+    for (const request of f.sent.slice(1)) {
+      assert.equal(request.sessionId, "session-1");
+      assert.equal(request.documentId, f.view.Bentley_ITMMessengerDocumentId);
+      f.response(request.queryId, { response: request.queryId });
+    }
+    assert.deepEqual((await Promise.all([first, second, omitted])).map((result) => result.data), [0, 1, 2]);
+  });
+
+  test(`${platform}: invalid startup requests reject before readiness without consuming pending slots`, async () => {
+    const f = fixture(platform);
+    const cyclic = {};
+    cyclic.self = cyclic;
+    await assert.rejects(f.transport.sendQuery("cyclic", 128, cyclic), /circular/i);
+    const pending = Array.from({ length: 128 }, (_, id) => f.transport.sendQuery("valid", id));
+    f.ready();
+    assert.equal(f.sent.filter((message) => message.operation === "query").length, 128);
+    pending.forEach((_, id) => f.response(id, { response: id }));
+    assert.equal((await Promise.all(pending)).length, 128);
+  });
+
   test(`${platform}: wrong-session replies and late handlers cannot affect a replacement session`, async () => {
     let finish;
     const f = fixture(platform, () => new Promise((resolve) => { finish = resolve; }));

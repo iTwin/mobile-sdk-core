@@ -171,11 +171,12 @@ export class FrontendQueryTransport extends QueryTransport {
   public async sendQuery(name: string, queryId: number, message: unknown): Promise<QueryResponse> {
     if (this._ended) throw new Error("Messenger document session ended.");
     if (this._pending.size >= maxPendingQueries) throw new Error("Messenger request limit reached.");
+    const request: object = JSON.parse(JSON.stringify({ operation: "query", name, queryId, message }));
     return new Promise<QueryResponse>((resolve, reject) => {
       this._pending.set(queryId, { resolve, reject });
       const send = () => {
         try {
-          this._post(this._queryBridge, { operation: "query", name, queryId, message });
+          this._post(this._queryBridge, request);
         } catch (error) {
           this._pending.delete(queryId);
           reject(error instanceof Error ? error : new Error("Messenger request delivery failed."));

@@ -16,7 +16,8 @@ modules with an `@itwin/` prefix.
 ## Frontend messaging
 
 `Messenger` exchanges queries and responses with the native Android/iOS SDK using authenticated
-document sessions. Startup queries wait for the document handshake. Query failures, document
+document sessions. Query data is snapshotted when submitted; startup queries wait for the
+document handshake. Query failures, document
 teardown, and session replacement reject pending Promises.
 
 Only the configured main frame is authorized. This does not
