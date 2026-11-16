@@ -125,6 +125,26 @@ for (const platform of ["android", "ios"]) {
     assert.equal((await Promise.all(pending)).length, 128);
   });
 
+  test(`${platform}: invalid names reject without consuming slots and long query names succeed`, async () => {
+    for (const ready of [false, true]) {
+      const f = fixture(platform);
+      if (ready) f.ready();
+      const longName = "\ud83c\udf0d".repeat(1025);
+      const sentBefore = f.sent.length;
+      for (const name of ["", undefined, null, 123]) {
+        await assert.rejects(f.transport.sendQuery(name, 128), /query name must be a non-empty string/);
+      }
+      assert.equal(f.sent.length, sentBefore);
+      const pending = Array.from({ length: 128 }, (_, id) => f.transport.sendQuery(id === 0 ? longName : "a", id));
+      if (!ready) f.ready();
+      const requests = f.sent.filter((message) => message.operation === "query");
+      assert.equal(requests.length, 128);
+      assert.equal(requests[0].name, longName);
+      pending.forEach((_, id) => f.response(id, { response: id }));
+      assert.equal((await Promise.all(pending)).length, 128);
+    }
+  });
+
   test(`${platform}: wrong-session replies and late handlers cannot affect a replacement session`, async () => {
     let finish;
     const f = fixture(platform, () => new Promise((resolve) => { finish = resolve; }));

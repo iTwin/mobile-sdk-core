@@ -170,6 +170,8 @@ export class FrontendQueryTransport extends QueryTransport {
 
   public async sendQuery(name: string, queryId: number, message: unknown): Promise<QueryResponse> {
     if (this._ended) throw new Error("Messenger document session ended.");
+    if (typeof name !== "string" || name.length === 0)
+      throw new Error("Messenger query name must be a non-empty string.");
     if (this._pending.size >= maxPendingQueries) throw new Error("Messenger request limit reached.");
     const request: object = JSON.parse(JSON.stringify({ operation: "query", name, queryId, message }));
     return new Promise<QueryResponse>((resolve, reject) => {

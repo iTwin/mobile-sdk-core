@@ -19,6 +19,7 @@ modules with an `@itwin/` prefix.
 document sessions. Query data is snapshotted when submitted; startup queries wait for the
 document handshake. Query failures, document
 teardown, and session replacement reject pending Promises.
+Query names must be non-empty strings; invalid names reject immediately.
 
 Only the configured main frame is authorized. This does not
 isolate trusted-origin scripts from each other or protect against trusted-origin XSS.
