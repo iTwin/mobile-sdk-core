@@ -2,11 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Base64Converter } from "./Base64Converter";
-import { MessengerImpl, QueryResponse, QueryTransport, TransportQueryHandler } from "./common/MessengerImpl";
+import { MessengerImpl } from "./common/MessengerImpl";
 import { QueryHandler } from "./common/QueryHandler";
-import { UIError } from "./common/UIError";
 import { MobileCore } from "./MobileCore";
+import { FrontendQueryTransport } from "./FrontendQueryTransport";
 
 /**
  * Class for handling communication to and from native code.
@@ -71,99 +70,3 @@ export class Messenger {
   }
 }
 
-/**
- * Query transport that passes messages to and from native UI via iOS and Android webviews.
- *
- * Note: Incoming data from native side is BASE64-encoded UTF-8. For any data that is
- * pure ASCII, JavaScript's builtin atob() function would decode it. However, any
- * data that includes non-ASCII would not decode properly via atob(), so
- * Base64Converter.base64Utf8ToString() is used instead.
- * @internal
- */
-class FrontendQueryTransport extends QueryTransport {
-  /**
-   * @internal
-   */
-  private _anyWindow: any = window;
-  /**
-   * @internal
-   */
-  private _queryResponse: (responseJson: string) => void;
-  /**
-   * @internal
-   */
-  private _query: (messageJson: string) => void;
-
-  constructor(onQueryReceived: TransportQueryHandler) {
-    super(onQueryReceived);
-
-    if (this._anyWindow.webkit) {
-      // iOS
-      this._queryResponse = (responseJson) => this._anyWindow.webkit.messageHandlers.Bentley_ITMMessenger_QueryResponse.postMessage(responseJson);
-      this._query = (messageJson) => this._anyWindow.webkit.messageHandlers.Bentley_ITMMessenger_Query.postMessage(messageJson);
-    } else if (this._anyWindow.Bentley_ITMMessenger) {
-      // Android
-      this._queryResponse = (responseJson) => this._anyWindow.Bentley_ITMMessenger.queryResponse(responseJson);
-      this._query = (messageJson) => this._anyWindow.Bentley_ITMMessenger.query(messageJson);
-    } else {
-      throw new Error("This MessengerImpl only supports iOS and Android.");
-    }
-
-    this._anyWindow.Bentley_ITMMessenger_Query = this._handleIncomingQuery;
-  }
-
-  private _handleIncomingQuery = async (name: string, queryId: number, messageJson: string) => {
-    let decodedMessageJson: string | undefined;
-    try {
-      decodedMessageJson = Base64Converter.base64Utf8ToString(messageJson);
-    } catch {
-      // ignore
-    }
-
-    const responseMessage: any = { queryId };
-    try {
-      const response = await this._onQueryReceived(name, decodedMessageJson ?? "");
-      responseMessage.response = response;
-    } catch (error) {
-      responseMessage.error = UIError.create(error);
-    }
-    this._queryResponse(JSON.stringify(responseMessage));
-  }
-
-  public async sendQuery(name: string, queryId: number, message: any): Promise<QueryResponse> {
-    const responseName = `Bentley_ITMMessenger_QueryResponse${queryId}`;
-    const responsePromise = new Promise<string | undefined>((resolve) => {
-      this._anyWindow[responseName] = resolve;
-    });
-
-    this._query(JSON.stringify({ name, message, queryId }));
-
-    const responseJson = await responsePromise;
-    delete this._anyWindow[responseName];
-
-    if (responseJson === undefined)
-      return {};
-
-    let response: any;
-    try {
-      // See note before class.
-      response = JSON.parse(Base64Converter.base64Utf8ToString(responseJson));
-    } catch {
-      // ignore
-    }
-
-    if (!response) {
-      return {};
-    }
-
-    if (response.unhandled) {
-      return { isUnhandled: true };
-    }
-
-    if (response.error !== undefined) {
-      return { error: response.error };
-    }
-
-    return { data: response.response };
-  }
-}

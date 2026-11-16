@@ -12,3 +12,15 @@ This repository contains the core npm module for creating [iTwin.js](http://www.
 
 Please see [VERSIONS.md](./VERSIONS.md) for instructions on determining the proper version for npm
 modules with an `@itwin/` prefix.
+
+## Frontend messaging
+
+`Messenger` exchanges queries and responses with the native Android/iOS SDK using authenticated
+document sessions. Startup queries wait for the document handshake. Query failures, document
+teardown, and session replacement reject pending Promises.
+
+Only the configured main frame is authorized. This does not
+isolate trusted-origin scripts from each other or protect against trusted-origin XSS.
+
+Run `npm test` for the focused Android/iOS frontend transport contract tests (including the build)
+and `npm run lint` for the package lint gate.
